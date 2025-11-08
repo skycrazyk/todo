@@ -1,0 +1,9 @@
+{
+  "workspace": ["./backend", "./frontend"],
+  "nodeModulesDir": "auto",
+  "imports": {
+    "hono": "npm:hono@^4.10.4",
+    "zod": "npm:zod@^4.1.12",
+    "@hono/zod-validator": "npm:@hono/zod-validator@^0.7.4"
+  }
+}

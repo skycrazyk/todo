@@ -1,0 +1,16 @@
+{
+  "name": "@app/backend",
+  "version": "0.0.0",
+  "exports": "./main.ts",
+  "tasks": {
+    "start": "deno serve -A main.ts",
+    "dev": "deno serve -A --watch main.ts"
+  },
+  "compilerOptions": {
+    "jsx": "precompile",
+    "jsxImportSource": "hono/jsx"
+  },
+  "imports": {
+    "@db/sqlite": "jsr:@db/sqlite@^0.12.0"
+  }
+}
