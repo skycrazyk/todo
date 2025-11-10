@@ -25,7 +25,12 @@ export function Todo({
   return (
     <li>
       {editId === String(id) ? (
-        <input ref={inputRef} onBlur={onEditBlur} />
+        <input
+          ref={inputRef}
+          data-id={id}
+          defaultValue={title}
+          onBlur={onEditBlur}
+        />
       ) : (
         <span data-id={id} onClick={onEditClick}>
           {id} - {title}

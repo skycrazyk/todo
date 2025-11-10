@@ -14,13 +14,13 @@ const zDelete = z.object({
 
 export const zTodo = z.object({
   id: z.number(),
-  title: z.string()
+  title: z.string(),
+  done: z.boolean()
 })
 
 export type Todo = z.infer<typeof zTodo>
 
-const zPatch = zTodo.clone()
-
+const zPatch = zTodo.partial({ title: true, done: true })
 type CrudResp = {
   msg: string
 } & ({ success: boolean; error?: never } | { success?: never; error: boolean })
@@ -66,9 +66,20 @@ const app = new Hono()
   })
   .patch('/todo', zValidator('json', zPatch), (c) => {
     const data = c.req.valid('json')
+
+    const setClauses = Object.keys(data)
+      .filter((c) => c !== 'id')
+      .map((c) => `${c} = (:${c})`)
+      .join(', ')
+
+    console.log('REQUEST =============================')
+    console.log(`UPDATE todos SET ${setClauses} WHERE id = (:id)`)
+    console.log(data)
+
     const patchRow = db.prepare(
-      'UPDATE todos SET title = (:title) WHERE id = (:id)'
+      `UPDATE todos SET ${setClauses} WHERE id = (:id)`
     )
+
     const result = patchRow.run(data)
 
     return c.json<CrudResp>(

@@ -18,7 +18,7 @@ export const api = createApi({
           return {
             error: {
               status: 500,
-              statusText: 'Error of getting todos',
+              statusText: 'Error',
               data: undefined
             }
           }
@@ -36,7 +36,7 @@ export const api = createApi({
           return {
             error: {
               status: 500,
-              statusText: 'Error of getting todos',
+              statusText: 'Error',
               data: undefined
             }
           }
@@ -54,7 +54,25 @@ export const api = createApi({
           return {
             error: {
               status: 500,
-              statusText: 'Error of getting todos',
+              statusText: 'Error',
+              data: undefined
+            }
+          }
+        }
+      },
+      invalidatesTags: ['todos']
+    }),
+    patch: build.mutation({
+      async queryFn(props: Parameters<typeof client.todo.$patch>[0]['json']) {
+        try {
+          const res = await client.todo.$patch({ json: props })
+          const data = await res.json()
+          return { data }
+        } catch {
+          return {
+            error: {
+              status: 500,
+              statusText: 'Error',
               data: undefined
             }
           }
@@ -65,4 +83,9 @@ export const api = createApi({
   })
 })
 
-export const { useTodosQuery, useAddMutation, useDelMutation } = api
+export const {
+  useTodosQuery,
+  useAddMutation,
+  useDelMutation,
+  usePatchMutation
+} = api

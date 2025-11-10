@@ -7,6 +7,7 @@ console.log('connected')
 db.sql`
 CREATE TABLE IF NOT EXISTS todos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL
+    title TEXT NOT NULL,
+    done BOOLEAN DEFAULT FALSE NOT NULL
 );
 `

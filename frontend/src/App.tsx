@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useAddMutation, useDelMutation, useTodosQuery } from './api.ts'
+import {
+  useAddMutation,
+  useDelMutation,
+  usePatchMutation,
+  useTodosQuery
+} from './api.ts'
 import { Todo, type TodoProps } from './Todo.tsx'
 
 function App() {
@@ -8,6 +13,7 @@ function App() {
   const [editId, setEditId] = useState('')
   const [add, { isSuccess: addIsSuccess }] = useAddMutation()
   const [del] = useDelMutation()
+  const [patch] = usePatchMutation()
 
   const onDelClick: TodoProps['onDelClick'] = (e) =>
     del(Number(e.currentTarget.dataset.id))
@@ -30,7 +36,10 @@ function App() {
   const onEditClick: TodoProps['onEditClick'] = (e) =>
     setEditId(String(e.currentTarget.dataset.id))
 
-  const onEditBlur: TodoProps['onEditBlur'] = () => {
+  const onEditBlur: TodoProps['onEditBlur'] = (e) => {
+    const { id } = e.currentTarget.dataset
+    const { value } = e.currentTarget
+    patch({ id: Number(id), title: value.trim() })
     setEditId('')
   }
 
@@ -53,6 +62,7 @@ function App() {
       <ul>
         {data?.map((todo) => (
           <Todo
+            key={todo.id}
             todo={todo}
             editId={editId}
             onDelClick={onDelClick}
