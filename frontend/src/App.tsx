@@ -43,6 +43,26 @@ function App() {
     setEditId('')
   }
 
+  const onEditEnter: TodoProps['onEditEnter'] = (e) => {
+    if (e.key === 'Escape') {
+      setEditId('')
+    }
+
+    if (e.key === 'Enter') {
+      const { id } = e.currentTarget.dataset
+      const { value } = e.currentTarget
+      patch({ id: Number(id), title: value.trim() })
+      setEditId('')
+    }
+  }
+
+  const onDoneChange: TodoProps['onDoneChange'] = (e) => {
+    const { id } = e.currentTarget.dataset
+    const { checked } = e.currentTarget
+
+    patch({ id: Number(id), done: checked })
+  }
+
   useEffect(() => {
     if (addIsSuccess) {
       setNewTitle('')
@@ -68,6 +88,8 @@ function App() {
             onDelClick={onDelClick}
             onEditClick={onEditClick}
             onEditBlur={onEditBlur}
+            onDoneChange={onDoneChange}
+            onEditEnter={onEditEnter}
           />
         ))}
       </ul>

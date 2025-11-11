@@ -72,10 +72,6 @@ const app = new Hono()
       .map((c) => `${c} = (:${c})`)
       .join(', ')
 
-    console.log('REQUEST =============================')
-    console.log(`UPDATE todos SET ${setClauses} WHERE id = (:id)`)
-    console.log(data)
-
     const patchRow = db.prepare(
       `UPDATE todos SET ${setClauses} WHERE id = (:id)`
     )

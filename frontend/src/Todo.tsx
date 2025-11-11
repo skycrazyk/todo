@@ -1,18 +1,23 @@
 import type { Todo } from '@app/backend'
 import { useEffect, useRef } from 'react'
+import './todo.css'
 
 export function Todo({
   editId,
-  todo: { id, title },
+  todo: { id, title, done },
   onEditClick,
   onEditBlur,
-  onDelClick
+  onEditEnter,
+  onDelClick,
+  onDoneChange
 }: {
   todo: Todo
   editId: string
   onEditClick: React.MouseEventHandler<HTMLSpanElement>
   onEditBlur: React.FocusEventHandler<HTMLInputElement>
+  onEditEnter: React.KeyboardEventHandler<HTMLInputElement>
   onDelClick: React.MouseEventHandler<HTMLButtonElement>
+  onDoneChange: React.ChangeEventHandler<HTMLInputElement>
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -23,21 +28,28 @@ export function Todo({
   }, [editId, id])
 
   return (
-    <li>
+    <li className="todo">
+      <input
+        type="checkbox"
+        checked={done}
+        data-id={id}
+        onChange={onDoneChange}
+      />
       {editId === String(id) ? (
         <input
           ref={inputRef}
           data-id={id}
           defaultValue={title}
           onBlur={onEditBlur}
+          onKeyDown={onEditEnter}
         />
       ) : (
         <span data-id={id} onClick={onEditClick}>
-          {id} - {title}
+          {id}: {title}
         </span>
       )}
       <button type="button" data-id={id} onClick={onDelClick}>
-        del
+        X
       </button>
     </li>
   )
