@@ -7,7 +7,7 @@ export function Todo({
   todo: { id, title, done },
   onEditClick,
   onEditBlur,
-  onEditEnter,
+  onEditKeyDown,
   onDelClick,
   onDoneChange
 }: {
@@ -15,7 +15,7 @@ export function Todo({
   editId: string
   onEditClick: React.MouseEventHandler<HTMLSpanElement>
   onEditBlur: React.FocusEventHandler<HTMLInputElement>
-  onEditEnter: React.KeyboardEventHandler<HTMLInputElement>
+  onEditKeyDown: React.KeyboardEventHandler<HTMLInputElement>
   onDelClick: React.MouseEventHandler<HTMLButtonElement>
   onDoneChange: React.ChangeEventHandler<HTMLInputElement>
 }) {
@@ -28,7 +28,11 @@ export function Todo({
   }, [editId, id])
 
   return (
-    <li className="todo">
+    <li
+      className="todo"
+      // TODO Брать id из li
+      data-id={id}
+    >
       <input
         type="checkbox"
         checked={done}
@@ -41,7 +45,7 @@ export function Todo({
           data-id={id}
           defaultValue={title}
           onBlur={onEditBlur}
-          onKeyDown={onEditEnter}
+          onKeyDown={onEditKeyDown}
         />
       ) : (
         <span data-id={id} onClick={onEditClick}>

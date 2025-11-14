@@ -1,83 +1,65 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { Todo } from '@app/backend'
-import { client } from './client.ts'
+import { client as c } from './client.ts'
+
+type Handler = (...args: any[]) => Promise<Response>
+type Return<T extends Handler> = Awaited<
+  ReturnType<Awaited<ReturnType<T>>['json']>
+>
+type Params<T extends Handler> = Parameters<T>[0]
+
+function queryFn<M extends Handler>(method: M) {
+  return async (param?: Parameters<M>[0]) => {
+    try {
+      const res = await method(param)
+      const data = (await res.json()) as Awaited<
+        ReturnType<Awaited<ReturnType<M>>['json']>
+      >
+      return { data }
+    } catch {
+      return {
+        // TODO придумать что-то получше
+        error: {
+          status: 500,
+          statusText: 'Error',
+          data: undefined
+        }
+      }
+    }
+  }
+}
 
 // Define a service using a base URL and expected endpoints
 export const api = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+  baseQuery: fetchBaseQuery({}),
   tagTypes: ['todos'],
   endpoints: (build) => ({
-    todos: build.query<Todo[], void>({
-      async queryFn() {
-        try {
-          const res = await client.todos.$get()
-          const data = await res.json()
-          return { data }
-        } catch {
-          return {
-            error: {
-              status: 500,
-              statusText: 'Error',
-              data: undefined
-            }
-          }
-        }
-      },
+    todos: build.query<
+      Return<typeof c.todos.$get>,
+      Params<typeof c.todos.$get>
+    >({
+      queryFn: queryFn(c.todos.$get),
       providesTags: (r) => (r ? ['todos'] : [])
     }),
-    add: build.mutation({
-      async queryFn(title: string) {
-        try {
-          const res = await client.todo.$post({ json: { title } })
-          const data = await res.json()
-          return { data }
-        } catch {
-          return {
-            error: {
-              status: 500,
-              statusText: 'Error',
-              data: undefined
-            }
-          }
-        }
-      },
+    add: build.mutation<
+      Return<typeof c.todo.$post>,
+      Params<typeof c.todo.$post>
+    >({
+      queryFn: queryFn(c.todo.$post),
       invalidatesTags: ['todos']
     }),
-    del: build.mutation({
-      async queryFn(id: number) {
-        try {
-          const res = await client.todo.$delete({ json: { id } })
-          const data = await res.json()
-          return { data }
-        } catch {
-          return {
-            error: {
-              status: 500,
-              statusText: 'Error',
-              data: undefined
-            }
-          }
-        }
-      },
+    del: build.mutation<
+      Return<typeof c.todo.$delete>,
+      Params<typeof c.todo.$delete>
+    >({
+      queryFn: queryFn(c.todo.$delete),
       invalidatesTags: ['todos']
     }),
-    patch: build.mutation({
-      async queryFn(props: Parameters<typeof client.todo.$patch>[0]['json']) {
-        try {
-          const res = await client.todo.$patch({ json: props })
-          const data = await res.json()
-          return { data }
-        } catch {
-          return {
-            error: {
-              status: 500,
-              statusText: 'Error',
-              data: undefined
-            }
-          }
-        }
-      },
+    patch: build.mutation<
+      Return<typeof c.todo.$patch>,
+      Params<typeof c.todo.$patch>
+    >({
+      queryFn: queryFn(c.todo.$patch),
       invalidatesTags: ['todos']
     })
   })

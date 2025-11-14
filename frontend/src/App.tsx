@@ -8,7 +8,7 @@ import {
 import { Todo, type TodoProps } from './Todo.tsx'
 
 function App() {
-  const { data } = useTodosQuery()
+  const { data } = useTodosQuery({})
   const [newTitle, setNewTitle] = useState('')
   const [editId, setEditId] = useState('')
   const [add, { isSuccess: addIsSuccess }] = useAddMutation()
@@ -16,7 +16,7 @@ function App() {
   const [patch] = usePatchMutation()
 
   const onDelClick: TodoProps['onDelClick'] = (e) =>
-    del(Number(e.currentTarget.dataset.id))
+    del({ json: { id: Number(e.currentTarget.dataset.id) } })
 
   const onAddEnter: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key !== 'Enter') return
@@ -25,7 +25,7 @@ function App() {
     const title = value.trim()
 
     if (title) {
-      add(title)
+      add({ json: { title } })
     }
   }
 
@@ -39,11 +39,11 @@ function App() {
   const onEditBlur: TodoProps['onEditBlur'] = (e) => {
     const { id } = e.currentTarget.dataset
     const { value } = e.currentTarget
-    patch({ id: Number(id), title: value.trim() })
+    patch({ json: { id: Number(id), title: value.trim() } })
     setEditId('')
   }
 
-  const onEditEnter: TodoProps['onEditEnter'] = (e) => {
+  const onEditKeyDown: TodoProps['onEditKeyDown'] = (e) => {
     if (e.key === 'Escape') {
       setEditId('')
     }
@@ -51,7 +51,7 @@ function App() {
     if (e.key === 'Enter') {
       const { id } = e.currentTarget.dataset
       const { value } = e.currentTarget
-      patch({ id: Number(id), title: value.trim() })
+      patch({ json: { id: Number(id), title: value.trim() } })
       setEditId('')
     }
   }
@@ -60,7 +60,7 @@ function App() {
     const { id } = e.currentTarget.dataset
     const { checked } = e.currentTarget
 
-    patch({ id: Number(id), done: checked })
+    patch({ json: { id: Number(id), done: checked } })
   }
 
   useEffect(() => {
@@ -89,7 +89,7 @@ function App() {
             onEditClick={onEditClick}
             onEditBlur={onEditBlur}
             onDoneChange={onDoneChange}
-            onEditEnter={onEditEnter}
+            onEditKeyDown={onEditKeyDown}
           />
         ))}
       </ul>
