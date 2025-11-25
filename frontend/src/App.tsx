@@ -8,7 +8,7 @@ import {
 import { Todo, type TodoProps } from './Todo.tsx'
 
 function App() {
-  const { data } = useTodosQuery({})
+  const { data } = useTodosQuery({ query: { done: 'true' } })
   const [newTitle, setNewTitle] = useState('')
   const [editId, setEditId] = useState('')
   const [add, { isSuccess: addIsSuccess }] = useAddMutation()

@@ -4,14 +4,6 @@ import * as z from 'zod'
 import { zValidator } from '@hono/zod-validator'
 import { db } from './database.ts'
 
-const zPost = z.object({
-  title: z.string()
-})
-
-const zDelete = z.object({
-  id: z.number()
-})
-
 export const zTodo = z.object({
   id: z.number(),
   title: z.string(),
@@ -20,7 +12,11 @@ export const zTodo = z.object({
 
 export type Todo = z.infer<typeof zTodo>
 
+const zGet = z.object({ done: z.stringbool().optional() })
+const zPost = zTodo.pick({ title: true })
+const zDelete = zTodo.pick({ id: true })
 const zPatch = zTodo.partial({ title: true, done: true })
+
 type CrudResp = {
   msg: string
 } & ({ success: boolean; error?: never } | { success?: never; error: boolean })
@@ -32,9 +28,20 @@ const app = new Hono()
       credentials: true // Set to true if you need to send cookies or authentication headers
     })
   )
-  .get('/todos', (c) => {
-    const list = db.prepare('SELECT * FROM todos')
-    return c.json(list.all() as Todo[])
+  .get('/todos', zValidator('query', zGet), (c) => {
+    const data = c.req.valid('query')
+
+    const whereClauses = Object.keys(data)
+      .map((c) => `${c} = (:${c})`)
+      .join(' AND ')
+
+    const list = db.prepare(
+      `SELECT * FROM todos ${
+        whereClauses.length ? `WHERE ${whereClauses}` : ''
+      }`
+    )
+
+    return c.json(list.all(data) as Todo[])
   })
   .post('/todo', zValidator('json', zPost), (c) => {
     const data = c.req.valid('json')
