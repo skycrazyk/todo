@@ -8,7 +8,10 @@ import {
 import { Todo, type TodoProps } from './Todo.tsx'
 
 function App() {
-  const { data } = useTodosQuery({ query: { done: 'true' } })
+  const [filter, setFilter] = useState<'all' | 'true' | 'false'>('all')
+  const { data: dataFiltered } = useTodosQuery({
+    query: { ...(['true', 'false'].includes(filter) && { done: filter }) }
+  })
   const [newTitle, setNewTitle] = useState('')
   const [editId, setEditId] = useState('')
   const [add, { isSuccess: addIsSuccess }] = useAddMutation()
@@ -72,6 +75,7 @@ function App() {
   return (
     <div>
       <div>
+        Add new
         <input
           type="text"
           value={newTitle}
@@ -79,8 +83,22 @@ function App() {
           onChange={onTitleChange}
         />
       </div>
+      <div>
+        <button onClick={() => setFilter('all')} disabled={filter === 'all'}>
+          All
+        </button>
+        <button onClick={() => setFilter('true')} disabled={filter === 'true'}>
+          Done
+        </button>
+        <button
+          onClick={() => setFilter('false')}
+          disabled={filter === 'false'}
+        >
+          Undone
+        </button>
+      </div>
       <ul>
-        {data?.map((todo) => (
+        {dataFiltered?.map((todo) => (
           <Todo
             key={todo.id}
             todo={todo}
