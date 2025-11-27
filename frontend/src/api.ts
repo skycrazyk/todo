@@ -20,7 +20,7 @@ function queryFn<M extends Handler>(method: M) {
         // TODO придумать что-то получше
         error: {
           status: 500,
-          statusText: 'Error',
+          statusText: 'Unknown error',
           data: undefined
         }
       }

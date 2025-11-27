@@ -4,10 +4,11 @@ import {
   useDelMutation,
   usePatchMutation,
   useTodosQuery
-} from './api.ts'
-import { Todo, type TodoProps } from './Todo.tsx'
+} from '../../api.ts'
+import { Todo, type TodoProps } from '../todo/Todo.tsx'
+import { getTodoId } from '../todo/getTodoId.ts'
 
-function App() {
+export function List() {
   const [filter, setFilter] = useState<'all' | 'true' | 'false'>('all')
   const { data: dataFiltered } = useTodosQuery({
     query: { ...(['true', 'false'].includes(filter) && { done: filter }) }
@@ -18,8 +19,10 @@ function App() {
   const [del] = useDelMutation()
   const [patch] = usePatchMutation()
 
-  const onDelClick: TodoProps['onDelClick'] = (e) =>
-    del({ json: { id: Number(e.currentTarget.dataset.id) } })
+  const onDelClick: TodoProps['onDelClick'] = (e) => {
+    const id = getTodoId(e)
+    del({ json: { id: Number(id) } })
+  }
 
   const onAddEnter: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key !== 'Enter') return
@@ -36,11 +39,13 @@ function App() {
     setNewTitle(e.currentTarget.value)
   }
 
-  const onEditClick: TodoProps['onEditClick'] = (e) =>
-    setEditId(String(e.currentTarget.dataset.id))
+  const onEditClick: TodoProps['onEditClick'] = (e) => {
+    const id = getTodoId(e)
+    setEditId(id.toString())
+  }
 
   const onEditBlur: TodoProps['onEditBlur'] = (e) => {
-    const { id } = e.currentTarget.dataset
+    const id = getTodoId(e)
     const { value } = e.currentTarget
     patch({ json: { id: Number(id), title: value.trim() } })
     setEditId('')
@@ -52,7 +57,7 @@ function App() {
     }
 
     if (e.key === 'Enter') {
-      const { id } = e.currentTarget.dataset
+      const id = getTodoId(e)
       const { value } = e.currentTarget
       patch({ json: { id: Number(id), title: value.trim() } })
       setEditId('')
@@ -60,7 +65,7 @@ function App() {
   }
 
   const onDoneChange: TodoProps['onDoneChange'] = (e) => {
-    const { id } = e.currentTarget.dataset
+    const id = getTodoId(e)
     const { checked } = e.currentTarget
 
     patch({ json: { id: Number(id), done: checked } })
@@ -102,17 +107,16 @@ function App() {
           <Todo
             key={todo.id}
             todo={todo}
-            editId={editId}
             onDelClick={onDelClick}
             onEditClick={onEditClick}
             onEditBlur={onEditBlur}
             onDoneChange={onDoneChange}
-            onEditKeyDown={onEditKeyDown}
+            onEditKeyDown={
+              editId === todo.id.toString() ? onEditKeyDown : undefined
+            }
           />
         ))}
       </ul>
     </div>
   )
 }
-
-export default App
