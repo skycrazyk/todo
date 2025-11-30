@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { client as c } from './client.ts'
+import { tokenManager } from './features/auth/tokenManager.ts'
 
 type Handler = (...args: any[]) => Promise<Response>
 type Return<T extends Handler> = Awaited<
@@ -10,17 +11,23 @@ type Params<T extends Handler> = Parameters<T>[0]
 function queryFn<M extends Handler>(method: M) {
   return async (param?: Parameters<M>[0]) => {
     try {
-      const res = await method(param)
+      const res = await method(param, {
+        headers: {
+          Authorization: `Bearer ${tokenManager.token}`
+        }
+      })
+
       const data = (await res.json()) as Awaited<
         ReturnType<Awaited<ReturnType<M>>['json']>
       >
+
       return { data }
     } catch {
       return {
         // TODO придумать что-то получше
         error: {
           status: 500,
-          statusText: 'Unknown error',
+          statusText: 'Internal Server Error',
           data: undefined
         }
       }
@@ -40,6 +47,9 @@ export const api = createApi({
     >({
       queryFn: queryFn(c.todos.$get),
       providesTags: (r) => (r ? ['todos'] : [])
+    }),
+    auth: build.query<Return<typeof c.auth.$get>, Params<typeof c.auth.$get>>({
+      queryFn: queryFn(c.auth.$get)
     }),
     add: build.mutation<
       Return<typeof c.todo.$post>,
@@ -69,5 +79,6 @@ export const {
   useTodosQuery,
   useAddMutation,
   useDelMutation,
-  usePatchMutation
+  usePatchMutation,
+  useAuthQuery
 } = api
