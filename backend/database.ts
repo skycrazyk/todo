@@ -4,18 +4,19 @@ export const db = new Database('database.db')
 
 db.sql`
 CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL
 );
 `
 
 db.sql`
-CREATE TABLE IF NOT EXISTS user_identities (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
-    iss VARCHAR(50) NOT NULL,
-    sub VARCHAR(255) NOT NULL,
-    UNIQUE(iss, sub)
+CREATE TABLE IF NOT EXISTS users_identities (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES users(id) NOT NULL,
+    iss VARCHAR(500) NOT NULL,
+    sub VARCHAR(500) NOT NULL,
+    UNIQUE(iss, sub),
+    UNIQUE(user_id, iss)
 );
 `
 
