@@ -2,6 +2,8 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import todo from './api/todo.ts'
 import todos from './api/todos.ts'
+import list from './api/list.ts'
+import lists from './api/lists.ts'
 import { clerkMiddleware, getAuth } from '@hono/clerk-auth'
 import { userMiddleware, type ComboUser } from './middlewares/userMiddleware.ts'
 import { bearerMiddleware } from './middlewares/bearerMiddleware.ts'
@@ -29,24 +31,10 @@ const app = new Hono<Env>()
   )
   .use('*', bearerMiddleware)
   .use('*', userMiddleware)
-  // TODO удалить тестовый роут
-  .get('/auth', (c) => {
-    const auth = getAuth(c)
-
-    if (!auth?.userId) {
-      return c.json({
-        message: 'You are not logged in.'
-      })
-    }
-
-    return c.json({
-      message: 'You are logged in!',
-      auth: auth,
-      user: c.get('user')
-    })
-  })
   .route('/todo', todo)
   .route('/todos', todos)
+  .route('/list', list)
+  .route('/lists', lists)
 
 export default app
 

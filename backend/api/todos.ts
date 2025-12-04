@@ -3,37 +3,37 @@ import * as z from 'zod'
 import { zValidator } from '@hono/zod-validator'
 import { db } from '../database.ts'
 import type { Todo } from './todo.ts'
-import type { CudRes } from '../common.ts'
+import type { Env } from '../main.ts'
 
-const zGet = z.object({ done: z.stringbool().optional() })
-const zPost = z.object({ title: z.string().optional() })
+const zGet = z.object({ list_id: z.number(), done: z.stringbool().optional() })
 
-const app = new Hono()
-  .get('/', zValidator('query', zGet), (c) => {
-    const data = c.req.valid('query')
+const app = new Hono<Env>().get('/', zValidator('query', zGet), (c) => {
+  const user = c.get('user')
+  const query = c.req.valid('query')
 
-    const whereClauses = Object.keys(data)
-      .map((c) => `${c} = (:${c})`)
-      .join(' AND ')
+  const listStmt = db.prepare(`
+    SELECT * 
+    FROM lists 
+    WHERE id = (:list_id) AND user_id = (:user_id)
+  `)
 
-    const list = db.prepare(
-      `SELECT * FROM todos ${
-        whereClauses.length ? `WHERE ${whereClauses}` : ''
-      }`
-    )
+  const list = listStmt.get({ id: query.list_id, user_id: user.id })
 
-    return c.json(list.all(data) as Todo[])
-  })
-  .post('/', zValidator('json', zPost), (c) => {
-    const data = c.req.valid('json')
-    const insert = db.prepare('INSERT INTO lists(title) VALUES (:title)')
-    const result = insert.run(data)
+  if (!list) {
+    return c.json<Todo[]>([])
+  }
 
-    return c.json<CudRes>(
-      result
-        ? { success: true, msg: 'List created successfully' }
-        : { error: true, msg: 'List wasn`t created' }
-    )
-  })
+  const whereClauses = Object.keys(query)
+    .map((c) => `${c} = (:${c})`)
+    .join(' AND ')
+
+  const todos = db.prepare(`
+    SELECT * 
+    FROM todos 
+    ${whereClauses.length ? `WHERE ${whereClauses}` : ''}
+  `)
+
+  return c.json<Todo[]>(todos.all(query))
+})
 
 export default app

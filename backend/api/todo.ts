@@ -7,13 +7,14 @@ import type { CudRes } from '../common.ts'
 export const zTodo = z.object({
   id: z.number(),
   title: z.string(),
-  done: z.boolean()
+  done: z.boolean(),
+  list_id: z.number()
 })
 
 export type Todo = z.infer<typeof zTodo>
 
-const zPost = zTodo.pick({ title: true })
-const zDelete = zTodo.pick({ id: true })
+const zPost = zTodo.pick({ title: true, list_id: true })
+const zDelete = zTodo.pick({ id: true, list_id: true })
 const zPatch = zTodo.partial({ title: true, done: true })
 
 const app = new Hono()
