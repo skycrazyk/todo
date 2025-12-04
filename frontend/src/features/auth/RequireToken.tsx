@@ -1,21 +1,24 @@
 import { useAuth } from '@clerk/clerk-react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { tokenManager } from './tokenManager.ts'
-import React, { useEffect, useState } from 'react'
+import { tokenConfig } from '../../common.ts'
 
 export const RequireToken = ({ children }: { children: React.ReactNode }) => {
-  const { getToken } = useAuth()
+  const auth = useAuth()
   const [token, setToken] = useState<string>()
 
-  useEffect(() => {
-    const fetchToken = async () => {
-      const token = await getToken({ template: 'base-template' })
-      if (!token) return
-      setToken(token)
-      tokenManager.token = token
-    }
+  const fetchToken = useCallback(async () => {
+    const token = await auth.getToken(tokenConfig)
 
+    if (!token) return
+
+    setToken(token)
+    tokenManager.token = token
+  }, [auth])
+
+  useEffect(() => {
     fetchToken()
-  }, [getToken])
+  }, [fetchToken])
 
   return token ? <>{children}</> : undefined
 }

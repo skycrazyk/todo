@@ -1,8 +1,8 @@
 import { Hono } from 'hono'
 import * as z from 'zod'
 import { zValidator } from '@hono/zod-validator'
-import { db } from './database.ts'
-import type { CudRes } from './common.ts'
+import { db } from '../database.ts'
+import type { CudRes } from '../common.ts'
 
 export const zTodo = z.object({
   id: z.number(),

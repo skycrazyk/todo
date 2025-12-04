@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { client as c } from './client.ts'
-import { tokenManager } from './features/auth/tokenManager.ts'
+import { tokenConfig } from './common.ts'
 
 type Handler = (...args: any[]) => Promise<Response>
 type Return<T extends Handler> = Awaited<
@@ -11,9 +11,11 @@ type Params<T extends Handler> = Parameters<T>[0]
 function queryFn<M extends Handler>(method: M) {
   return async (param?: Parameters<M>[0]) => {
     try {
+      const token = await Clerk?.session?.getToken(tokenConfig)
+
       const res = await method(param, {
         headers: {
-          Authorization: `Bearer ${tokenManager.token}`
+          Authorization: `Bearer ${token}`
         }
       })
 

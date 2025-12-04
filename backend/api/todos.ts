@@ -1,9 +1,9 @@
 import { Hono } from 'hono'
 import * as z from 'zod'
 import { zValidator } from '@hono/zod-validator'
-import { db } from './database.ts'
+import { db } from '../database.ts'
 import type { Todo } from './todo.ts'
-import type { CudRes } from './common.ts'
+import type { CudRes } from '../common.ts'
 
 const zGet = z.object({ done: z.stringbool().optional() })
 const zPost = z.object({ title: z.string().optional() })

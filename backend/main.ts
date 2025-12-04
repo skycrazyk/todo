@@ -1,72 +1,19 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { bearerAuth } from 'hono/bearer-auth'
-import todo from './todo.ts'
-import todos from './todos.ts'
+import todo from './api/todo.ts'
+import todos from './api/todos.ts'
 import { clerkMiddleware, getAuth } from '@hono/clerk-auth'
-import { createMiddleware } from 'hono/factory'
-import { db } from './database.ts'
+import { userMiddleware, type ComboUser } from './middlewares/userMiddleware.ts'
+import { bearerMiddleware } from './middlewares/bearerMiddleware.ts'
 
-// Добавить блокировку транзакций создания пользователя при необходимости
-
-const iss = 'clerk' // TODO брать из запроса
-
-const bearerMiddleware = createMiddleware((c, next) => {
-  const auth = getAuth(c)
-
-  const bearer = bearerAuth({
-    token: auth?.userId
-      ? c.req.header('Authorization')?.replace('Bearer ', '') || ''
-      : ''
-  })
-
-  return bearer(c, next)
-})
-
-const userMiddleware = createMiddleware(async (c, next) => {
-  const auth = getAuth(c)
-
-  const stmtGetUser = db.prepare(`SELECT * FROM users
-    INNER JOIN users_identities
-    ON users.id = users_identities.user_id
-    WHERE iss = (:iss) AND sub = (:sub)
-  `)
-
-  const user = stmtGetUser.get({
-    iss,
-    sub: auth?.userId
-  })
-
-  if (user) {
-    c.set('user', user)
-  } else {
-    const stmtCreateUser = db.prepare(`INSERT INTO users(email)
-      VALUES(:email)
-      RETURNING *
-    `)
-
-    const newUser = stmtCreateUser.get({
-      email: auth?.sessionClaims?.email as string // TODO need fix typings
-    })
-
-    const stmtCreateIdentity =
-      db.prepare(`INSERT INTO users_identities(user_id, iss, sub)
-      VALUES(:user_id, :iss, :sub)
-    `)
-
-    stmtCreateIdentity.run({
-      user_id: newUser?.id as number,
-      iss,
-      sub: auth?.userId
-    })
-
-    c.set('user', newUser)
+export type Env = {
+  Variables: {
+    // TODO вероятно можно глобально расширять типы Hono. см. clerkMiddleware
+    user: ComboUser
   }
+}
 
-  await next()
-})
-
-const app = new Hono()
+const app = new Hono<Env>()
   .use(
     cors({
       origin: '*', // Replace with the actual origin of your frontend application
@@ -82,6 +29,7 @@ const app = new Hono()
   )
   .use('*', bearerMiddleware)
   .use('*', userMiddleware)
+  // TODO удалить тестовый роут
   .get('/auth', (c) => {
     const auth = getAuth(c)
 
