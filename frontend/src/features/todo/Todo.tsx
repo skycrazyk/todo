@@ -26,7 +26,7 @@ export function Todo({
   }, [onEditKeyDown])
 
   return (
-    <li className="todo" data-item-id={id}>
+    <li className="todo" data-itemid={id}>
       <input type="checkbox" checked={done} onChange={onDoneChange} />
       {onEditKeyDown ? (
         <input

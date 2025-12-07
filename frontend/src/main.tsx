@@ -2,7 +2,6 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { store } from './store.ts'
 import { Provider } from 'react-redux'
-import { List } from './features/list/List.tsx'
 import {
   ClerkProvider,
   SignedIn,
@@ -13,7 +12,7 @@ import {
 
 import './client.ts'
 import { RequireToken } from './features/auth/RequireToken.tsx'
-import { TestAuth } from './features/testAuth/TestAuth.tsx'
+import { Lists } from './features/lists/Lists.tsx'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -31,8 +30,7 @@ createRoot(document.getElementById('root')!).render(
         <SignedIn>
           <RequireToken>
             <UserButton />
-            <List />
-            <TestAuth />
+            <Lists />
           </RequireToken>
         </SignedIn>
       </Provider>

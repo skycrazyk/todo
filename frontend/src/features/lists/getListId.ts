@@ -1,3 +1,3 @@
 import { createGetDataId } from '../../utils/createGetDataId.ts'
 
-export const getTodoId = createGetDataId('itemid')
+export const getListId = createGetDataId('listid')

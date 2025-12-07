@@ -39,3 +39,5 @@ const app = new Hono<Env>()
 export default app
 
 export type AppType = typeof app
+
+export type { Todo } from './api/todo.ts'

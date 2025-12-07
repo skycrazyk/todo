@@ -1,27 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import {
-  useAddMutation,
-  useDelMutation,
-  usePatchMutation,
+  useAddTodoMutation,
+  useDelTodoMutation,
+  usePatchTodoMutation,
   useTodosQuery
 } from '../../api.ts'
 import { Todo, type TodoProps } from '../todo/Todo.tsx'
 import { getTodoId } from '../todo/getTodoId.ts'
 
-export function List() {
+export function List({ listId }: { listId: number }) {
   const [filter, setFilter] = useState<'all' | 'true' | 'false'>('all')
   const { data: dataFiltered } = useTodosQuery({
-    query: { ...(['true', 'false'].includes(filter) && { done: filter }) }
+    query: {
+      list_id: listId.toString(),
+      ...(['true', 'false'].includes(filter) && { done: filter })
+    }
   })
   const [newTitle, setNewTitle] = useState('')
   const [editId, setEditId] = useState('')
-  const [add, { isSuccess: addIsSuccess }] = useAddMutation()
-  const [del] = useDelMutation()
-  const [patch] = usePatchMutation()
+  const [add, { isSuccess: addIsSuccess }] = useAddTodoMutation()
+  const [del] = useDelTodoMutation()
+  const [patch] = usePatchTodoMutation()
 
   const onDelClick: TodoProps['onDelClick'] = (e) => {
     const id = getTodoId(e)
-    del({ json: { id: Number(id) } })
+    del({ json: { list_id: listId, id: Number(id) } })
   }
 
   const onAddEnter: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
@@ -31,7 +34,7 @@ export function List() {
     const title = value.trim()
 
     if (title) {
-      add({ json: { title } })
+      add({ json: { list_id: listId, title } })
     }
   }
 
@@ -47,7 +50,7 @@ export function List() {
   const onEditBlur: TodoProps['onEditBlur'] = (e) => {
     const id = getTodoId(e)
     const { value } = e.currentTarget
-    patch({ json: { id: Number(id), title: value.trim() } })
+    patch({ json: { list_id: listId, id: Number(id), title: value.trim() } })
     setEditId('')
   }
 
@@ -59,7 +62,7 @@ export function List() {
     if (e.key === 'Enter') {
       const id = getTodoId(e)
       const { value } = e.currentTarget
-      patch({ json: { id: Number(id), title: value.trim() } })
+      patch({ json: { list_id: listId, id: Number(id), title: value.trim() } })
       setEditId('')
     }
   }
@@ -68,7 +71,7 @@ export function List() {
     const id = getTodoId(e)
     const { checked } = e.currentTarget
 
-    patch({ json: { id: Number(id), done: checked } })
+    patch({ json: { list_id: listId, id: Number(id), done: checked } })
   }
 
   useEffect(() => {
@@ -80,7 +83,7 @@ export function List() {
   return (
     <div>
       <div>
-        Add new
+        Add todo
         <input
           type="text"
           value={newTitle}

@@ -5,7 +5,10 @@ import { db } from '../database.ts'
 import type { Todo } from './todo.ts'
 import type { Env } from '../main.ts'
 
-const zGet = z.object({ list_id: z.number(), done: z.stringbool().optional() })
+const zGet = z.object({
+  list_id: z.coerce.number(),
+  done: z.stringbool().optional()
+})
 
 const app = new Hono<Env>().get('/', zValidator('query', zGet), (c) => {
   const user = c.get('user')
@@ -14,7 +17,7 @@ const app = new Hono<Env>().get('/', zValidator('query', zGet), (c) => {
   const listStmt = db.prepare(`
     SELECT * 
     FROM lists 
-    WHERE id = (:list_id) AND user_id = (:user_id)
+    WHERE id = (:id) AND user_id = (:user_id)
   `)
 
   const list = listStmt.get({ id: query.list_id, user_id: user.id })

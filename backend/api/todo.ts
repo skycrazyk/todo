@@ -20,8 +20,15 @@ const zPatch = zTodo.partial({ title: true, done: true })
 const app = new Hono()
   .post('/', zValidator('json', zPost), (c) => {
     const data = c.req.valid('json')
-    const insert = db.prepare('INSERT INTO todos(title) VALUES (:title)')
-    const result = insert.run(data)
+
+    const result = db
+      .prepare(
+        `
+      INSERT INTO todos(title, list_id) 
+      VALUES (:title, :list_id)
+    `
+      )
+      .run(data)
 
     return c.json<CudRes>(
       result
@@ -39,15 +46,19 @@ const app = new Hono()
     const data = c.req.valid('json')
 
     const setClauses = Object.keys(data)
-      .filter((c) => c !== 'id')
+      .filter((c) => !['id', 'list_id'].includes(c))
       .map((c) => `${c} = (:${c})`)
       .join(', ')
 
-    const patchRow = db.prepare(
-      `UPDATE todos SET ${setClauses} WHERE id = (:id)`
-    )
-
-    const result = patchRow.run(data)
+    const result = db
+      .prepare(
+        `
+      UPDATE todos 
+      SET ${setClauses} 
+      WHERE id = (:id) AND list_id = (:list_id)
+    `
+      )
+      .run(data)
 
     return c.json<CudRes>(
       result
@@ -57,8 +68,15 @@ const app = new Hono()
   })
   .delete('/', zValidator('json', zDelete), (c) => {
     const data = c.req.valid('json')
-    const deleteRow = db.prepare('DELETE FROM todos WHERE id = (:id)')
-    const result = deleteRow.run(data)
+
+    const result = db
+      .prepare(
+        `
+      DELETE FROM todos 
+      WHERE id = (:id) AND list_id = (:list_id)
+    `
+      )
+      .run(data)
 
     return c.json<CudRes>(
       result
