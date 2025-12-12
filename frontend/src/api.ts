@@ -38,8 +38,8 @@ function queryFn<M extends Handler>(method: M) {
 }
 
 const Tags = {
-  Todo: 'Todo',
-  List: 'List'
+  Todos: 'Todos',
+  Lists: 'Lists'
 } as const
 
 // Define a service using a base URL and expected endpoints
@@ -54,12 +54,8 @@ export const api = createApi({
       Params<typeof c.todos.$get>
     >({
       queryFn: queryFn(c.todos.$get),
-      providesTags: (r, _e, a) => [
-        ...(r || []).map((r) => ({
-          type: Tags.Todo,
-          id: r.id.toString()
-        })),
-        { type: Tags.List, id: a.query.list_id.toString() }
+      providesTags: (_r, _e, a) => [
+        { type: Tags.Todos, id: a.query.list_id.toString() }
       ]
     }),
     // TODO
@@ -68,21 +64,21 @@ export const api = createApi({
       Params<typeof c.todo.$post>
     >({
       queryFn: queryFn(c.todo.$post),
-      invalidatesTags: (_r, _e, a) => [{ type: Tags.List, id: a.json.list_id }]
+      invalidatesTags: (_r, _e, a) => [{ type: Tags.Todos, id: a.json.list_id }]
     }),
     delTodo: build.mutation<
       Return<typeof c.todo.$delete>,
       Params<typeof c.todo.$delete>
     >({
       queryFn: queryFn(c.todo.$delete),
-      invalidatesTags: (_r, _e, a) => [{ type: Tags.Todo, id: a.json.id }]
+      invalidatesTags: (_r, _e, a) => [{ type: Tags.Todos, id: a.json.list_id }]
     }),
     patchTodo: build.mutation<
       Return<typeof c.todo.$patch>,
       Params<typeof c.todo.$patch>
     >({
       queryFn: queryFn(c.todo.$patch),
-      invalidatesTags: (_r, _e, a) => [{ type: Tags.Todo, id: a.json.id }]
+      invalidatesTags: (_r, _e, a) => [{ type: Tags.Todos, id: a.json.list_id }]
     }),
     // LIST
     addList: build.mutation<
@@ -90,14 +86,14 @@ export const api = createApi({
       Params<typeof c.list.$post>
     >({
       queryFn: queryFn(c.list.$post),
-      invalidatesTags: [Tags.List]
+      invalidatesTags: [Tags.Lists]
     }),
     delList: build.mutation<
       Return<typeof c.list.$delete>,
       Params<typeof c.list.$delete>
     >({
       queryFn: queryFn(c.list.$delete),
-      invalidatesTags: [Tags.List]
+      invalidatesTags: [Tags.Lists]
     }),
     // LISTS
     getLists: build.query<
@@ -105,9 +101,7 @@ export const api = createApi({
       Params<typeof c.lists.$get>
     >({
       queryFn: queryFn(c.lists.$get),
-      providesTags: (r) => [
-        ...(r || []).map((r) => ({ type: Tags.List, id: r.id.toString() }))
-      ]
+      providesTags: [Tags.Lists]
     })
   })
 })
