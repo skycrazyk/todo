@@ -63,7 +63,7 @@ const app = new Hono()
     return c.json<CudRes>(
       result
         ? { success: true, msg: 'Todo updated successfully' }
-        : { error: true, msg: 'Todo wasn`t updated' }
+        : { error: true, msg: "Todo wasn't updated" }
     )
   })
   .delete('/', zValidator('json', zDelete), (c) => {

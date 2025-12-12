@@ -15,6 +15,7 @@ export type List = z.infer<typeof zList>
 
 const zPost = z.object({ title: z.string().optional().default('') })
 const zDelete = z.object({ id: z.number() })
+const zPatch = zList.pick({ id: true, title: true }).partial({ title: true })
 
 const app = new Hono<Env>()
   .post('/', zValidator('json', zPost), (c) => {
@@ -39,7 +40,8 @@ const app = new Hono<Env>()
   .delete('/', zValidator('json', zDelete), (c) => {
     const user = c.get('user')
     const data = c.req.valid('json')
-    // Сначала нужно понять есть ли список и принадлежит ли он пользователю
+
+    // Определяем принадлежность списка пользователю
     const list = db
       .prepare(
         `
@@ -64,6 +66,7 @@ const app = new Hono<Env>()
       `
     ).run(data)
 
+    // Удаляем список
     const result = db
       .prepare(
         `
@@ -77,6 +80,50 @@ const app = new Hono<Env>()
       result
         ? { success: true, msg: 'List created successfully' }
         : { error: true, msg: 'List wasn`t created' }
+    )
+  })
+  .patch('/', zValidator('json', zPatch), (c) => {
+    const user = c.get('user')
+    const jReq = c.req.valid('json')
+
+    // Определяем принадлежность списка пользователю
+    const list = db
+      .prepare(
+        `
+      SELECT * FROM lists 
+      WHERE id = (:id) AND user_id = (:user_id)
+      `
+      )
+      .get<List>({ id: jReq.id, user_id: user.id })
+
+    if (!list) {
+      return c.json<CudRes>(
+        { error: true, msg: 'List not found or does not belong to user' },
+        404
+      )
+    }
+
+    // Формируем список измененных полей
+    const setClauses = Object.keys(jReq)
+      .filter((c) => !['id'].includes(c))
+      .map((c) => `${c} = (:${c})`)
+      .join(', ')
+
+    // Обновляем список
+    const result = db
+      .prepare(
+        `
+      UPDATE lists
+      SET ${setClauses}   
+      WHERE id = (:id) AND user_id = (:userId)
+    `
+      )
+      .run({ ...jReq, userId: user.id })
+
+    return c.json<CudRes>(
+      result
+        ? { success: true, msg: 'List changed successfully' }
+        : { error: true, msg: "List wasn't changed" }
     )
   })
 

@@ -4,7 +4,7 @@ import todo from './api/todo.ts'
 import todos from './api/todos.ts'
 import list from './api/list.ts'
 import lists from './api/lists.ts'
-import { clerkMiddleware, getAuth } from '@hono/clerk-auth'
+import { clerkMiddleware } from '@hono/clerk-auth'
 import { userMiddleware, type ComboUser } from './middlewares/userMiddleware.ts'
 import { bearerMiddleware } from './middlewares/bearerMiddleware.ts'
 
@@ -41,3 +41,4 @@ export default app
 export type AppType = typeof app
 
 export type { Todo } from './api/todo.ts'
+export type { List } from './api/list.ts'

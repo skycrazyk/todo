@@ -1,15 +1,11 @@
-import {
-  useAddListMutation,
-  useDelListMutation,
-  useGetListsQuery
-} from '../../api.ts'
+import { useState } from 'react'
+import { useAddListMutation, useGetListsQuery } from '../../api.ts'
 import { List } from '../list/List.tsx'
-import { getListId } from './getListId.ts'
 
 export function Lists() {
+  const [editId, setEditId] = useState('')
   const { data: lists } = useGetListsQuery({})
   const [add] = useAddListMutation()
-  const [del] = useDelListMutation()
 
   return (
     <div>
@@ -32,22 +28,8 @@ export function Lists() {
         />
       </div>
       <ul>
-        {lists?.map(({ id, title }) => (
-          <div key={id} data-listid={id}>
-            <div>
-              <button
-                type="button"
-                onClick={(e) => {
-                  const listId = getListId(e)
-                  del({ json: { id: Number(listId) } })
-                }}
-              >
-                X
-              </button>
-              <input type="text" value={title} readOnly placeholder="Noname" />
-            </div>
-            <List listId={id} />
-          </div>
+        {lists?.map((list) => (
+          <List list={list} key={list.id} />
         ))}
       </ul>
     </div>
