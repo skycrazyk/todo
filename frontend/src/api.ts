@@ -73,7 +73,7 @@ export const api = createApi({
       queryFn: queryFn(c.todo.$delete),
       invalidatesTags: (_r, _e, a) => [{ type: Tags.Todos, id: a.json.list_id }]
     }),
-    patchTodo: build.mutation<
+    updTodo: build.mutation<
       Return<typeof c.todo.$patch>,
       Params<typeof c.todo.$patch>
     >({
@@ -95,6 +95,13 @@ export const api = createApi({
       queryFn: queryFn(c.list.$delete),
       invalidatesTags: [Tags.Lists]
     }),
+    updList: build.mutation<
+      Return<typeof c.list.$patch>,
+      Params<typeof c.list.$patch>
+    >({
+      queryFn: queryFn(c.list.$patch),
+      invalidatesTags: [Tags.Lists]
+    }),
     // LISTS
     getLists: build.query<
       Return<typeof c.lists.$get>,
@@ -110,8 +117,9 @@ export const {
   useTodosQuery,
   useAddTodoMutation,
   useDelTodoMutation,
-  usePatchTodoMutation,
+  useUpdTodoMutation,
   useAddListMutation,
   useGetListsQuery,
-  useDelListMutation
+  useDelListMutation,
+  useUpdListMutation
 } = api

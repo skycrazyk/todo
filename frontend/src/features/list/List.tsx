@@ -3,7 +3,17 @@ import { getListId } from '../lists/getListId.ts'
 import { Todos } from '../Todos/Todos.tsx'
 import type { List } from '@app/backend'
 
-export function List({ list: { id, title } }: { list: List }) {
+export function List({
+  list: { id, title },
+  onEditClick,
+  onEditBlur,
+  onEditKeyDown
+}: {
+  list: List
+  onEditClick: React.MouseEventHandler<HTMLSpanElement>
+  onEditBlur: React.FocusEventHandler<HTMLInputElement> | undefined
+  onEditKeyDown: React.KeyboardEventHandler<HTMLInputElement>
+}) {
   const [del] = useDelListMutation()
 
   return (
@@ -21,16 +31,17 @@ export function List({ list: { id, title } }: { list: List }) {
         <span>{id}</span>
         <input
           type="text"
-          value={title}
-          readOnly
+          defaultValue={title}
+          readOnly={!onEditBlur}
           placeholder="Noname"
-          onClick={(e) => {
-            const listId = getListId(e)
-            // TODO
-          }}
+          onClick={onEditClick}
+          onBlur={onEditBlur}
+          onKeyDown={onEditKeyDown}
         />
       </div>
       <Todos listId={id} />
     </div>
   )
 }
+
+export type ListProps = React.ComponentProps<typeof List>

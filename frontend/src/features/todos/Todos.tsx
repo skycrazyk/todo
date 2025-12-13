@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {
   useAddTodoMutation,
   useDelTodoMutation,
-  usePatchTodoMutation,
+  useUpdTodoMutation,
   useTodosQuery
 } from '../../api.ts'
 import { Todo, type TodoProps } from '../todo/Todo.tsx'
@@ -20,7 +20,7 @@ export function Todos({ listId }: { listId: number }) {
   const [editId, setEditId] = useState('')
   const [add, { isSuccess: addIsSuccess }] = useAddTodoMutation()
   const [del] = useDelTodoMutation()
-  const [patch] = usePatchTodoMutation()
+  const [patch] = useUpdTodoMutation()
 
   const onDelClick: TodoProps['onDelClick'] = (e) => {
     const id = getTodoId(e)
