@@ -1,0 +1,22 @@
+.greet {
+  display: grid;
+  height: 100vh;
+  text-align: center;
+  place-items: center;
+  color: white;
+
+  button {
+    background: none;
+    border: 5px solid white;
+    padding: 1rem 3rem;
+    font-size: 2rem;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+      border-color: black;
+      color: black;
+    }
+  }
+}

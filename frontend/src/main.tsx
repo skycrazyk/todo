@@ -6,13 +6,14 @@ import {
   ClerkProvider,
   SignedIn,
   SignedOut,
-  SignInButton,
   UserButton
 } from '@clerk/clerk-react'
 
 import './client.ts'
 import { RequireToken } from './features/auth/RequireToken.tsx'
 import { Lists } from './features/lists/Lists.tsx'
+import './Main.css'
+import { Greet } from './features/greet/Greet.tsx'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -25,7 +26,7 @@ createRoot(document.getElementById('root')!).render(
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
       <Provider store={store}>
         <SignedOut>
-          <SignInButton />
+          <Greet />
         </SignedOut>
         <SignedIn>
           <RequireToken>

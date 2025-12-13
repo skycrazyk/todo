@@ -1,0 +1,9 @@
+:root {
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: linear-gradient(90deg, #fc466b 0%, #3f5efb 100%);
+  margin: 0;
+  font-family: var(--font-family);
+}
