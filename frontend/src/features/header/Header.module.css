@@ -1,0 +1,8 @@
+.header {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.2rem 1rem 0.2rem;
+
+  :global(.cl-userButton-root) {
+    display: flex;
+  }
+}

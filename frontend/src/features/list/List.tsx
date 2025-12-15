@@ -7,17 +7,19 @@ export function List({
   list: { id, title },
   onEditClick,
   onEditBlur,
-  onEditKeyDown
+  onEditKeyDown,
+  className
 }: {
   list: List
   onEditClick: React.MouseEventHandler<HTMLSpanElement>
   onEditBlur: React.FocusEventHandler<HTMLInputElement> | undefined
   onEditKeyDown: React.KeyboardEventHandler<HTMLInputElement>
+  className?: string
 }) {
   const [del] = useDelListMutation()
 
   return (
-    <div key={id} data-listid={id}>
+    <li key={id} data-listid={id} className={className}>
       <div>
         <button
           type="button"
@@ -40,7 +42,7 @@ export function List({
         />
       </div>
       <Todos listId={id} />
-    </div>
+    </li>
   )
 }
 

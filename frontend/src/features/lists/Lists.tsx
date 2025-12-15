@@ -6,6 +6,7 @@ import {
 } from '../../api.ts'
 import { List, type ListProps } from '../list/List.tsx'
 import { getListId } from './getListId.ts'
+import s from './Lists.module.css'
 
 export function Lists() {
   const [editId, setEditId] = useState('')
