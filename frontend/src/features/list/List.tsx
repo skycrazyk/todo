@@ -2,24 +2,23 @@ import { useDelListMutation } from '../../api.ts'
 import { getListId } from '../lists/getListId.ts'
 import { Todos } from '../Todos/Todos.tsx'
 import type { List } from '@app/backend'
+import s from './List.module.css'
 
 export function List({
   list: { id, title },
   onEditClick,
   onEditBlur,
-  onEditKeyDown,
-  className
+  onEditKeyDown
 }: {
   list: List
   onEditClick: React.MouseEventHandler<HTMLSpanElement>
   onEditBlur: React.FocusEventHandler<HTMLInputElement> | undefined
   onEditKeyDown: React.KeyboardEventHandler<HTMLInputElement>
-  className?: string
 }) {
   const [del] = useDelListMutation()
 
   return (
-    <li key={id} data-listid={id} className={className}>
+    <li data-listid={id} className={s.list}>
       <div>
         <button
           type="button"

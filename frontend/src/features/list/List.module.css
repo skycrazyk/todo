@@ -1,0 +1,4 @@
+.list {
+  width: calc(100vw / 3);
+  flex-shrink: 0;
+}

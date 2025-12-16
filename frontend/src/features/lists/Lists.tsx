@@ -40,7 +40,7 @@ export function Lists() {
   }
 
   return (
-    <div>
+    <>
       <div>
         <input
           type="text"
@@ -59,7 +59,7 @@ export function Lists() {
           }}
         />
       </div>
-      <ul>
+      <ul className={s.lists}>
         {lists?.map((list) => (
           <List
             list={list}
@@ -70,6 +70,6 @@ export function Lists() {
           />
         ))}
       </ul>
-    </div>
+    </>
   )
 }
