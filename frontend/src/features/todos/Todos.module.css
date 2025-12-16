@@ -1,0 +1,28 @@
+.input {
+  display: block;
+  width: 100%;
+  border: 3px solid var(--border-color);
+  background: transparent;
+  font-size: var(--font-size);
+  color: var(--font-color);
+  padding: 0.2rem 0.3rem;
+  margin-bottom: 3px;
+
+  &:focus {
+    border-color: var(--border-color-focus);
+    color: var(--font-color-focus);
+  }
+}
+
+.filters {
+  display: grid;
+  gap: 3px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.btn {
+  &:disabled {
+    color: var(--font-color-focus);
+    border-color: var(--border-color-focus);
+  }
+}

@@ -19,9 +19,20 @@ export function List({
 
   return (
     <li data-listid={id} className={s.list}>
-      <div>
+      <div className={s.header}>
+        <input
+          className={s.title}
+          type="text"
+          defaultValue={title}
+          readOnly={!onEditBlur}
+          placeholder="List name"
+          onClick={onEditClick}
+          onBlur={onEditBlur}
+          onKeyDown={onEditKeyDown}
+        />
         <button
           type="button"
+          className={s.del}
           onClick={(e) => {
             const listId = getListId(e)
             del({ json: { id: Number(listId) } })
@@ -29,16 +40,6 @@ export function List({
         >
           X
         </button>
-        <span>{id}</span>
-        <input
-          type="text"
-          defaultValue={title}
-          readOnly={!onEditBlur}
-          placeholder="Noname"
-          onClick={onEditClick}
-          onBlur={onEditBlur}
-          onKeyDown={onEditKeyDown}
-        />
       </div>
       <Todos listId={id} />
     </li>

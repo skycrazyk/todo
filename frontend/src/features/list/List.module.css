@@ -1,4 +1,39 @@
 .list {
   width: calc(100vw / 3);
   flex-shrink: 0;
+  padding: 0.3rem 0.5rem;
+}
+
+.header {
+  display: flex;
+  margin-bottom: 2px;
+}
+
+.title {
+  background: transparent;
+  border: none;
+  display: block;
+  flex-grow: 1;
+  font-size: 2rem;
+  text-align: center;
+
+  &:focus {
+    color: black;
+
+    &::placeholder {
+      color: white;
+      opacity: 0.5;
+    }
+  }
+}
+
+.del {
+  border: 3px solid white;
+  width: 2.5rem;
+  cursor: pointer;
+
+  &:hover {
+    border-color: black;
+    color: black;
+  }
 }

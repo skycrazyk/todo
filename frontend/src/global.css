@@ -1,11 +1,42 @@
 :root {
   --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-size: 1.2rem;
+  --font-color: white;
+  --font-color-focus: black;
+  --font-color-disabled: DarkGray;
+  --border-color: white;
+  --border-color-focus: black;
+  --border-color-disabled: DarkGray;
+  --border-width: 3px;
 }
 
 body {
   background: linear-gradient(90deg, #fc466b 0%, #3f5efb 100%);
   margin: 0;
   font-family: var(--font-family);
+  font-size: var(--font-size);
+  color: var(--font-color);
+}
+
+input,
+button {
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  color: var(--font-color);
+  border: var(--border-width) solid var(--border-color);
+  background: transparent;
+  outline: none;
+
+  &:disabled {
+    border-color: var(--border-color-disabled);
+    color: var(--font-color-disabled);
+  }
+}
+
+button {
+  &:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 * {

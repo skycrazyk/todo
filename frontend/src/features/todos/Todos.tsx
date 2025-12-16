@@ -7,6 +7,7 @@ import {
 } from '../../api.ts'
 import { Todo, type TodoProps } from '../todo/Todo.tsx'
 import { getTodoId } from '../todo/getTodoId.ts'
+import s from './Todos.module.css'
 
 export function Todos({ listId }: { listId: number }) {
   const [filter, setFilter] = useState<'all' | 'true' | 'false'>('all')
@@ -82,23 +83,33 @@ export function Todos({ listId }: { listId: number }) {
 
   return (
     <div>
-      <div>
-        Add todo
-        <input
-          type="text"
-          value={newTitle}
-          onKeyDown={onAddEnter}
-          onChange={onTitleChange}
-        />
-      </div>
-      <div>
-        <button onClick={() => setFilter('all')} disabled={filter === 'all'}>
+      <input
+        className={s.input}
+        type="text"
+        value={newTitle}
+        onKeyDown={onAddEnter}
+        onChange={onTitleChange}
+      />
+      <div className={s.filters}>
+        <button
+          type="button"
+          className={s.btn}
+          onClick={() => setFilter('all')}
+          disabled={filter === 'all'}
+        >
           All
         </button>
-        <button onClick={() => setFilter('true')} disabled={filter === 'true'}>
+        <button
+          type="button"
+          className={s.btn}
+          onClick={() => setFilter('true')}
+          disabled={filter === 'true'}
+        >
           Done
         </button>
         <button
+          type="button"
+          className={s.btn}
           onClick={() => setFilter('false')}
           disabled={filter === 'false'}
         >
