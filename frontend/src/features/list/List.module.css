@@ -6,34 +6,33 @@
 
 .header {
   display: flex;
-  margin-bottom: 2px;
+  margin-bottom: var(--margin-base);
 }
 
 .title {
-  background: transparent;
-  border: none;
-  display: block;
   flex-grow: 1;
   font-size: 2rem;
   text-align: center;
+  margin-right: var(--margin-base);
+  border-color: transparent;
 
   &:focus {
-    color: black;
+    color: var(--font-color-focus);
+    border-color: var(--border-color-focus);
 
     &::placeholder {
-      color: white;
-      opacity: 0.5;
+      opacity: 0;
     }
   }
 }
 
 .del {
-  border: 3px solid white;
+  border: var(--border-width) solid var(--border-color);
   width: 2.5rem;
-  cursor: pointer;
+  flex-shrink: 0;
 
   &:hover {
-    border-color: black;
-    color: black;
+    border-color: var(--border-color-focus);
+    color: var(--font-color-focus);
   }
 }

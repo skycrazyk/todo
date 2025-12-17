@@ -1,0 +1,31 @@
+.todo {
+  display: flex;
+  gap: var(--margin-base);
+  align-items: center;
+  justify-content: stretch;
+
+  &:not(:last-child) {
+    margin-bottom: var(--margin-base);
+  }
+}
+
+.title {
+  flex-grow: 1;
+
+  &:read-only {
+    border-color: transparent;
+  }
+}
+
+.del {
+  opacity: 0;
+  width: 2rem;
+
+  .todo:hover & {
+    opacity: 1;
+  }
+
+  .title:not(:read-only) + & {
+    opacity: 1;
+  }
+}

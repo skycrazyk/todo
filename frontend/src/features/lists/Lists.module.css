@@ -1,8 +1,5 @@
 .lists {
   display: flex;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  overflow-x: auto;
   flex-grow: 1;
+  overflow-x: auto;
 }

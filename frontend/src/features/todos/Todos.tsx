@@ -116,7 +116,7 @@ export function Todos({ listId }: { listId: number }) {
           Undone
         </button>
       </div>
-      <ul>
+      <ul className={s.todos}>
         {dataFiltered?.map((todo) => (
           <Todo
             key={todo.id}

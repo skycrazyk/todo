@@ -1,44 +1,113 @@
-:root {
-  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --font-size: 1.2rem;
-  --font-color: white;
-  --font-color-focus: black;
-  --font-color-disabled: DarkGray;
-  --border-color: white;
-  --border-color-focus: black;
-  --border-color-disabled: DarkGray;
-  --border-width: 3px;
-}
+@layer global {
+  :root {
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-size: 1.2rem;
+    --font-color: white;
+    --font-color-focus: black;
+    --font-color-disabled: DarkGray;
+    --border-color: white;
+    --border-color-focus: black;
+    --border-color-disabled: DarkGray;
+    --border-width: 3px;
+    --margin-base: 3px;
 
-body {
-  background: linear-gradient(90deg, #fc466b 0%, #3f5efb 100%);
-  margin: 0;
-  font-family: var(--font-family);
-  font-size: var(--font-size);
-  color: var(--font-color);
-}
-
-input,
-button {
-  font-family: var(--font-family);
-  font-size: var(--font-size);
-  color: var(--font-color);
-  border: var(--border-width) solid var(--border-color);
-  background: transparent;
-  outline: none;
-
-  &:disabled {
-    border-color: var(--border-color-disabled);
-    color: var(--font-color-disabled);
+    --form-control-color: white;
+    --form-control-disabled: #959495;
   }
-}
 
-button {
-  &:not(:disabled) {
-    cursor: pointer;
+  body {
+    background: linear-gradient(90deg, #fc466b 0%, #3f5efb 100%);
+    margin: 0;
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    color: var(--font-color);
   }
-}
 
-* {
-  box-sizing: border-box;
+  input[type='text'],
+  button {
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    color: var(--font-color);
+    border: var(--border-width) solid var(--border-color);
+    background: transparent;
+    outline: none;
+
+    &:disabled {
+      border-color: var(--border-color-disabled);
+      color: var(--font-color-disabled);
+    }
+
+    &:focus {
+      border-color: var(--border-color-focus);
+      color: var(--font-color-focus);
+    }
+  }
+
+  button {
+    &:not(:disabled) {
+      cursor: pointer;
+
+      &:hover {
+        border-color: var(--border-color-focus);
+        color: var(--font-color-focus);
+      }
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ul,
+  ol {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  input[type='checkbox'] {
+    /* Add if not using autoprefixer */
+    -webkit-appearance: none;
+    /* Remove most all native input styles */
+    appearance: none;
+    /* For iOS < 15 */
+    background-color: var(--form-background);
+    /* Not removed via appearance */
+    margin: 0;
+
+    font: inherit;
+    color: currentColor;
+    width: 1.15em;
+    height: 1.15em;
+    border: var(--border-width) solid currentColor;
+
+    display: grid;
+    place-content: center;
+  }
+
+  input[type='checkbox'] {
+    font-size: 1.7rem;
+
+    &::before {
+      content: '';
+      width: 1rem;
+      height: 1rem;
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+      transform: scale(0);
+      box-shadow: inset 1rem 1rem var(--form-control-color);
+      /* Windows High Contrast Mode */
+      background-color: CanvasText;
+    }
+
+    &:checked::before {
+      transform: scale(1);
+    }
+
+    &:disabled {
+      --form-control-color: var(--form-control-disabled);
+
+      color: var(--form-control-disabled);
+      cursor: not-allowed;
+    }
+  }
 }

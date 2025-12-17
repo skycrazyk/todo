@@ -1,6 +1,6 @@
 import type { Todo } from '@app/backend'
 import { useEffect, useRef } from 'react'
-import './Todo.css'
+import s from './Todo.module.css'
 
 export function Todo({
   todo: { id, title, done },
@@ -26,21 +26,24 @@ export function Todo({
   }, [onEditKeyDown])
 
   return (
-    <li className="todo" data-itemid={id}>
-      <input type="checkbox" checked={done} onChange={onDoneChange} />
-      {onEditKeyDown ? (
-        <input
-          ref={inputRef}
-          defaultValue={title}
-          onBlur={onEditBlur}
-          onKeyDown={onEditKeyDown}
-        />
-      ) : (
-        <span onClick={onEditClick}>
-          {id}: {title}
-        </span>
-      )}
-      <button type="button" onClick={onDelClick}>
+    <li className={s.todo} data-itemid={id}>
+      <input
+        type="checkbox"
+        checked={done}
+        onChange={onDoneChange}
+        className={s.done}
+      />
+      <input
+        type="text"
+        ref={inputRef}
+        defaultValue={title}
+        onBlur={onEditBlur}
+        onKeyDown={onEditKeyDown}
+        readOnly={!onEditKeyDown}
+        onClick={onEditClick}
+        className={s.title}
+      />
+      <button type="button" onClick={onDelClick} className={s.del}>
         X
       </button>
     </li>

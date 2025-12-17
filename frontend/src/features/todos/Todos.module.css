@@ -1,23 +1,17 @@
 .input {
   display: block;
   width: 100%;
-  border: 3px solid var(--border-color);
   background: transparent;
   font-size: var(--font-size);
-  color: var(--font-color);
   padding: 0.2rem 0.3rem;
-  margin-bottom: 3px;
-
-  &:focus {
-    border-color: var(--border-color-focus);
-    color: var(--font-color-focus);
-  }
+  margin-bottom: var(--margin-base);
 }
 
 .filters {
   display: grid;
-  gap: 3px;
+  gap: var(--margin-base);
   grid-template-columns: repeat(3, 1fr);
+  margin-bottom: var(--margin-base);
 }
 
 .btn {
