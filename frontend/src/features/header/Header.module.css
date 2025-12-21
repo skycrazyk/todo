@@ -1,6 +1,8 @@
 .header {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--highlight);
   padding: 0.2rem 1rem 0.2rem;
+  display: flex;
+  justify-content: space-between;
 
   :global(.cl-userButton-root) {
     display: flex;

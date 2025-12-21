@@ -11,14 +11,13 @@ import s from './Todos.module.css'
 
 export function Todos({ listId }: { listId: number }) {
   const [filter, setFilter] = useState<'all' | 'true' | 'false'>('all')
-  const { data: dataFiltered } = useTodosQuery({
+  const { data: todos } = useTodosQuery({
     query: {
       list_id: listId.toString(),
       ...(['true', 'false'].includes(filter) && { done: filter })
     }
   })
   const [newTitle, setNewTitle] = useState('')
-  const [editId, setEditId] = useState('')
   const [add, { isSuccess: addIsSuccess }] = useAddTodoMutation()
   const [del] = useDelTodoMutation()
   const [patch] = useUpdTodoMutation()
@@ -43,28 +42,22 @@ export function Todos({ listId }: { listId: number }) {
     setNewTitle(e.currentTarget.value)
   }
 
-  const onEditClick: TodoProps['onEditClick'] = (e) => {
-    const id = getTodoId(e)
-    setEditId(id.toString())
-  }
-
   const onEditBlur: TodoProps['onEditBlur'] = (e) => {
     const id = getTodoId(e)
     const { value } = e.currentTarget
     patch({ json: { list_id: listId, id: Number(id), title: value.trim() } })
-    setEditId('')
   }
 
   const onEditKeyDown: TodoProps['onEditKeyDown'] = (e) => {
     if (e.key === 'Escape') {
-      setEditId('')
+      e.currentTarget.blur()
     }
 
     if (e.key === 'Enter') {
       const id = getTodoId(e)
       const { value } = e.currentTarget
       patch({ json: { list_id: listId, id: Number(id), title: value.trim() } })
-      setEditId('')
+      e.currentTarget.blur()
     }
   }
 
@@ -84,11 +77,12 @@ export function Todos({ listId }: { listId: number }) {
   return (
     <div>
       <input
-        className={s.input}
+        className={s.addInput}
         type="text"
         value={newTitle}
         onKeyDown={onAddEnter}
         onChange={onTitleChange}
+        placeholder="Add todo"
       />
       <div className={s.filters}>
         <button
@@ -117,17 +111,14 @@ export function Todos({ listId }: { listId: number }) {
         </button>
       </div>
       <ul className={s.todos}>
-        {dataFiltered?.map((todo) => (
+        {todos?.map((todo) => (
           <Todo
             key={todo.id}
             todo={todo}
             onDelClick={onDelClick}
-            onEditClick={onEditClick}
             onEditBlur={onEditBlur}
             onDoneChange={onDoneChange}
-            onEditKeyDown={
-              editId === todo.id.toString() ? onEditKeyDown : undefined
-            }
+            onEditKeyDown={onEditKeyDown}
           />
         ))}
       </ul>

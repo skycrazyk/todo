@@ -1,5 +1,5 @@
 .list {
-  width: calc(100vw / 3);
+  width: calc(100% / 3);
   flex-shrink: 0;
   padding: 0.3rem 0.5rem;
 }
@@ -9,15 +9,15 @@
   margin-bottom: var(--margin-base);
 }
 
-.title {
+.titleInput {
   flex-grow: 1;
   font-size: 2rem;
   text-align: center;
   margin-right: var(--margin-base);
   border-color: transparent;
+  min-width: 0;
 
   &:focus {
-    color: var(--font-color-focus);
     border-color: var(--border-color-focus);
 
     &::placeholder {
@@ -27,12 +27,6 @@
 }
 
 .del {
-  border: var(--border-width) solid var(--border-color);
   width: 2.5rem;
   flex-shrink: 0;
-
-  &:hover {
-    border-color: var(--border-color-focus);
-    color: var(--font-color-focus);
-  }
 }

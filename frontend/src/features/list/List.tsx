@@ -6,13 +6,11 @@ import s from './List.module.css'
 
 export function List({
   list: { id, title },
-  onEditClick,
   onEditBlur,
   onEditKeyDown
 }: {
   list: List
-  onEditClick: React.MouseEventHandler<HTMLSpanElement>
-  onEditBlur: React.FocusEventHandler<HTMLInputElement> | undefined
+  onEditBlur: React.FocusEventHandler<HTMLInputElement>
   onEditKeyDown: React.KeyboardEventHandler<HTMLInputElement>
 }) {
   const [del] = useDelListMutation()
@@ -21,12 +19,10 @@ export function List({
     <li data-listid={id} className={s.list}>
       <div className={s.header}>
         <input
-          className={s.title}
+          className={s.titleInput}
           type="text"
           defaultValue={title}
-          readOnly={!onEditBlur}
           placeholder="List name"
-          onClick={onEditClick}
           onBlur={onEditBlur}
           onKeyDown={onEditKeyDown}
         />

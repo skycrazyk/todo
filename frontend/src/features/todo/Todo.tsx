@@ -1,30 +1,19 @@
 import type { Todo } from '@app/backend'
-import { useEffect, useRef } from 'react'
 import s from './Todo.module.css'
 
 export function Todo({
   todo: { id, title, done },
-  onEditClick,
   onEditBlur,
   onEditKeyDown,
   onDelClick,
   onDoneChange
 }: {
   todo: Todo
-  onEditClick: React.MouseEventHandler<HTMLSpanElement>
   onEditBlur: React.FocusEventHandler<HTMLInputElement>
-  onEditKeyDown: React.KeyboardEventHandler<HTMLInputElement> | undefined
+  onEditKeyDown: React.KeyboardEventHandler<HTMLInputElement>
   onDelClick: React.MouseEventHandler<HTMLButtonElement>
   onDoneChange: React.ChangeEventHandler<HTMLInputElement>
 }) {
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (onEditKeyDown) {
-      inputRef.current?.focus()
-    }
-  }, [onEditKeyDown])
-
   return (
     <li className={s.todo} data-itemid={id}>
       <input
@@ -35,12 +24,9 @@ export function Todo({
       />
       <input
         type="text"
-        ref={inputRef}
         defaultValue={title}
         onBlur={onEditBlur}
         onKeyDown={onEditKeyDown}
-        readOnly={!onEditKeyDown}
-        onClick={onEditClick}
         className={s.title}
       />
       <button type="button" onClick={onDelClick} className={s.del}>

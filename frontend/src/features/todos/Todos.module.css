@@ -1,5 +1,4 @@
-.input {
-  display: block;
+.addInput {
   width: 100%;
   background: transparent;
   font-size: var(--font-size);
@@ -19,4 +18,8 @@
     color: var(--font-color-focus);
     border-color: var(--border-color-focus);
   }
+}
+
+.todos {
+  padding-bottom: 1rem;
 }

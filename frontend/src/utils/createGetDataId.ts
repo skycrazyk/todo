@@ -1,5 +1,5 @@
 export function createGetDataId(dataAttr: string) {
-  return function getDataId(e: React.SyntheticEvent) {
+  const getDataId = function getDataId(e: React.SyntheticEvent) {
     const elem = e.currentTarget.closest(`[data-${dataAttr}]`)
     const dataset = elem && 'dataset' in elem && elem.dataset
 
@@ -17,4 +17,10 @@ export function createGetDataId(dataAttr: string) {
 
     return (dataset as Record<string, string>)[dataAttr]
   }
+
+  const findDataId = function findDataId(id: string) {
+    return document.querySelector(`[data-${dataAttr}="${id}"]`)
+  }
+
+  return [getDataId, findDataId] as const
 }

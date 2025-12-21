@@ -10,6 +10,7 @@
     --border-color-disabled: DarkGray;
     --border-width: 3px;
     --margin-base: 3px;
+    --highlight: rgba(255, 255, 255, 0.2);
   }
 
   body {
@@ -33,10 +34,12 @@
       border-color: var(--border-color-disabled);
       color: var(--font-color-disabled);
     }
+  }
 
+  input[type='text'] {
     &:focus {
-      border-color: var(--border-color-focus);
       color: var(--font-color-focus);
+      border-color: var(--border-color-focus);
     }
   }
 
@@ -44,7 +47,8 @@
     &:not(:disabled) {
       cursor: pointer;
 
-      &:hover {
+      &:hover,
+      &:focus {
         border-color: var(--border-color-focus);
         color: var(--font-color-focus);
       }
@@ -84,8 +88,16 @@
 
   input[type='checkbox'] {
     font-size: 1.7rem;
-    &:hover {
+    flex-shrink: 0;
+    outline: none;
+
+    &:hover,
+    &:focus {
       color: var(--border-color-focus);
+
+      &::before {
+        box-shadow: inset 1rem 1rem var(--border-color-focus);
+      }
     }
 
     &::before {
@@ -99,12 +111,12 @@
       background-color: CanvasText;
     }
 
-    &:hover::before {
-      box-shadow: inset 1rem 1rem var(--border-color-focus);
-    }
-
     &:checked::before {
       transform: scale(1);
+    }
+
+    &:not(:disabled) {
+      cursor: pointer;
     }
   }
 }

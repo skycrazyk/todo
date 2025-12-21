@@ -5,27 +5,34 @@
   justify-content: stretch;
 
   &:not(:last-child) {
-    margin-bottom: var(--margin-base);
+    margin-bottom: calc(var(--margin-base) * 2);
+  }
+
+  &:has(:focus),
+  &:hover {
+    background-color: var(--highlight);
+    outline: var(--margin-base) solid var(--highlight);
   }
 }
 
 .title {
   flex-grow: 1;
+  border-color: transparent;
+  min-width: 0;
 
-  &:read-only {
-    border-color: transparent;
+  &:focus {
+    border-color: unset;
   }
 }
 
 .del {
   opacity: 0;
   width: 2rem;
+  flex-shrink: 0;
 
-  .todo:hover & {
-    opacity: 1;
-  }
-
-  .title:not(:read-only) + & {
+  &:focus,
+  .todo:hover &,
+  .title:focus + & {
     opacity: 1;
   }
 }
