@@ -2,8 +2,8 @@ import { Hono } from 'hono'
 import * as z from 'zod'
 import { zValidator } from '@hono/zod-validator'
 import { db } from '../database.ts'
-import type { CudRes } from '../common.ts'
 import type { Env } from '../main.ts'
+import { exception, success } from '../utils/index.ts'
 
 const zList = z.object({
   id: z.number(),
@@ -31,11 +31,11 @@ const app = new Hono<Env>()
       )
       .run({ ...data, user_id: user.id })
 
-    return c.json<CudRes>(
-      result
-        ? { success: true, msg: 'List created successfully' }
-        : { error: true, msg: 'List wasn`t created' }
-    )
+    if (!result) {
+      exception(c, 500, 'List wasn`t created')
+    }
+
+    return success(c, 'List created successfully')
   })
   .delete('/', zValidator('json', zDelete), (c) => {
     const user = c.get('user')
@@ -52,10 +52,7 @@ const app = new Hono<Env>()
       .get<List>({ ...data, user_id: user.id })
 
     if (!list) {
-      return c.json<CudRes>(
-        { error: true, msg: 'List not found or does not belong to user' },
-        404
-      )
+      exception(c, 404, 'List not found or does not belong to user')
     }
 
     // Удаляем все задачи из списка
@@ -76,11 +73,11 @@ const app = new Hono<Env>()
       )
       .run({ ...data, user_id: user.id })
 
-    return c.json<CudRes>(
-      result
-        ? { success: true, msg: 'List created successfully' }
-        : { error: true, msg: 'List wasn`t created' }
-    )
+    if (!result) {
+      exception(c, 500, 'List wasn`t created')
+    }
+
+    return success(c, 'List created successfully')
   })
   .patch('/', zValidator('json', zPatch), (c) => {
     const user = c.get('user')
@@ -97,10 +94,7 @@ const app = new Hono<Env>()
       .get<List>({ id: jReq.id, user_id: user.id })
 
     if (!list) {
-      return c.json<CudRes>(
-        { error: true, msg: 'List not found or does not belong to user' },
-        404
-      )
+      exception(c, 404, 'List not found or does not belong to user')
     }
 
     // Формируем список измененных полей
@@ -120,11 +114,11 @@ const app = new Hono<Env>()
       )
       .run({ ...jReq, userId: user.id })
 
-    return c.json<CudRes>(
-      result
-        ? { success: true, msg: 'List changed successfully' }
-        : { error: true, msg: "List wasn't changed" }
-    )
+    if (!result) {
+      exception(c, 404, "List wasn't changed")
+    }
+
+    return success(c, 'List changed successfully')
   })
 
 export default app

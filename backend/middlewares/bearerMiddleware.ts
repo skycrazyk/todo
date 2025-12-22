@@ -1,16 +1,14 @@
 import { getAuth } from '@hono/clerk-auth'
-import { bearerAuth } from 'hono/bearer-auth'
 import { createMiddleware } from 'hono/factory'
 import type { Env } from '../main.ts'
+import { exception } from '../utils/index.ts'
 
-export const bearerMiddleware = createMiddleware<Env>((c, next) => {
+export const bearerMiddleware = createMiddleware<Env>(async (c, next) => {
   const auth = getAuth(c)
 
-  const bearer = bearerAuth({
-    token: auth?.userId
-      ? c.req.header('Authorization')?.replace('Bearer ', '') || ''
-      : ''
-  })
+  if (!auth?.userId) {
+    exception(c, 401, 'Unauthorized')
+  }
 
-  return bearer(c, next)
+  return await next()
 })

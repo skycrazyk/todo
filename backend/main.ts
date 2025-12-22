@@ -1,4 +1,4 @@
-import { Hono } from 'hono'
+import { Hono, type Context } from 'hono'
 import { cors } from 'hono/cors'
 import todo from './api/todo.ts'
 import todos from './api/todos.ts'
@@ -7,6 +7,8 @@ import lists from './api/lists.ts'
 import { clerkMiddleware } from '@hono/clerk-auth'
 import { userMiddleware, type ComboUser } from './middlewares/userMiddleware.ts'
 import { bearerMiddleware } from './middlewares/bearerMiddleware.ts'
+import { HTTPException } from 'hono/http-exception'
+import type { BackendError } from './utils/exception.ts'
 
 export type Env = {
   Variables: {
@@ -14,6 +16,8 @@ export type Env = {
     user: ComboUser
   }
 }
+
+export type Ctx = Context<Env>
 
 const app = new Hono<Env>()
   .use(
@@ -35,6 +39,24 @@ const app = new Hono<Env>()
   .route('/todos', todos)
   .route('/list', list)
   .route('/lists', lists)
+  .onError((e, c) => {
+    if (e instanceof HTTPException) {
+      console.error(e.cause)
+      // Get the custom response
+      return e.getResponse()
+    }
+
+    return c.json(
+      {
+        success: false,
+        error: {
+          name: 'AppError',
+          message: 'Unknown server error'
+        }
+      } satisfies BackendError,
+      500
+    )
+  })
 
 export default app
 
