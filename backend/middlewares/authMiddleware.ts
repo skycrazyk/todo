@@ -3,7 +3,7 @@ import { createMiddleware } from 'hono/factory'
 import type { Env } from '../main.ts'
 import { exception } from '../utils/index.ts'
 
-export const bearerMiddleware = createMiddleware<Env>(async (c, next) => {
+export const authMiddleware = createMiddleware<Env>(async (c, next) => {
   const auth = getAuth(c)
 
   if (!auth?.userId) {

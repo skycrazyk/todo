@@ -1,12 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { api } from './api.ts'
+import { api } from './features/api/api.ts'
+import { errorLogger } from './features/api/errorLogger.ts'
 
 export const store = configureStore({
   reducer: {
     api: api.reducer
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware)
+    getDefaultMiddleware().concat(api.middleware, errorLogger)
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

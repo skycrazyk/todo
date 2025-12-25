@@ -1,8 +1,7 @@
 import { Hono } from 'hono'
-import * as z from 'zod'
-import { zValidator } from '@hono/zod-validator'
+import { z } from 'zod'
 import { db } from '../database.ts'
-import { exception, success } from '../utils/index.ts'
+import { exception, success, zValidator } from '../utils/index.ts'
 import type { Env } from '../main.ts'
 
 export const zTodo = z.object({

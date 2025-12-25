@@ -16,9 +16,11 @@
     "clsx": "^2.1.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-hot-toast": "^2.6.0",
     "react-redux": "^9.2.0"
   },
   "devDependencies": {
+    "@deno/vite-plugin": "^1.0.6",
     "@eslint/js": "^9.36.0",
     "@types/node": "^24.6.0",
     "@types/react": "^19.1.16",

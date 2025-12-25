@@ -6,9 +6,9 @@ import list from './api/list.ts'
 import lists from './api/lists.ts'
 import { clerkMiddleware } from '@hono/clerk-auth'
 import { userMiddleware, type ComboUser } from './middlewares/userMiddleware.ts'
-import { bearerMiddleware } from './middlewares/bearerMiddleware.ts'
+import { authMiddleware } from './middlewares/authMiddleware.ts'
 import { HTTPException } from 'hono/http-exception'
-import type { BackendError } from './utils/exception.ts'
+import type { ZError } from '@app/shared'
 
 export type Env = {
   Variables: {
@@ -33,7 +33,7 @@ const app = new Hono<Env>()
       publishableKey: Deno.env.get('CLERK_PUBLISHABLE_KEY')
     })
   )
-  .use('*', bearerMiddleware)
+  .use('*', authMiddleware)
   .use('*', userMiddleware)
   .route('/todo', todo)
   .route('/todos', todos)
@@ -41,19 +41,16 @@ const app = new Hono<Env>()
   .route('/lists', lists)
   .onError((e, c) => {
     if (e instanceof HTTPException) {
-      console.error(e.cause)
+      console.error('Error cause:', e.cause)
       // Get the custom response
       return e.getResponse()
     }
 
     return c.json(
       {
-        success: false,
-        error: {
-          name: 'AppError',
-          message: 'Unknown server error'
-        }
-      } satisfies BackendError,
+        name: 'AppError',
+        message: 'Unknown server error'
+      } satisfies ZError,
       500
     )
   })

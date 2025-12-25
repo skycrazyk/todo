@@ -1,5 +1,6 @@
 import { HTTPException } from 'hono/http-exception'
 import type { Ctx } from '../main.ts'
+import type { ZError } from '@app/shared'
 
 export function exception<T extends Ctx>(
   ctx: T,
@@ -8,19 +9,8 @@ export function exception<T extends Ctx>(
 ) {
   throw new HTTPException(code, {
     res: ctx.json({
-      success: false,
-      error: {
-        name: 'AppError',
-        message: message
-      }
-    } satisfies BackendError)
+      name: 'AppError',
+      message: message
+    } satisfies ZError)
   })
-}
-
-export type BackendError = {
-  success: false
-  error: {
-    name: 'AppError' | 'ZotError'
-    message: string
-  }
 }

@@ -1,6 +1,6 @@
 import { UserButton } from '@clerk/clerk-react'
 import s from './Header.module.css'
-import { useAddListMutation } from '../../api.ts'
+import { useAddListMutation } from '../api/api.ts'
 import { addListKey } from '../../common.ts'
 
 export function Header() {

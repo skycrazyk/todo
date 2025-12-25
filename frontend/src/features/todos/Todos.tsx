@@ -4,19 +4,21 @@ import {
   useDelTodoMutation,
   useUpdTodoMutation,
   useTodosQuery
-} from '../../api.ts'
+} from '../api/api.ts'
 import { Todo, type TodoProps } from '../todo/Todo.tsx'
 import { getTodoId } from '../todo/getTodoId.ts'
 import s from './Todos.module.css'
 
 export function Todos({ listId }: { listId: number }) {
   const [filter, setFilter] = useState<'all' | 'true' | 'false'>('all')
+
   const { data: todos } = useTodosQuery({
     query: {
       list_id: listId.toString(),
       ...(['true', 'false'].includes(filter) && { done: filter })
     }
   })
+
   const [newTitle, setNewTitle] = useState('')
   const [add, { isSuccess: addIsSuccess }] = useAddTodoMutation()
   const [del] = useDelTodoMutation()

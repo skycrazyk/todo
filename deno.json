@@ -1,5 +1,5 @@
 {
-  "workspace": ["./backend", "./frontend"],
+  "workspace": ["./backend", "./frontend", "./shared"],
   "nodeModulesDir": "auto",
   "imports": {
     "hono": "npm:hono@^4.10.4",

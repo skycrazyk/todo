@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
-import * as z from 'zod'
-import { zValidator } from '@hono/zod-validator'
+import { z } from 'zod'
+import { zValidator } from '../utils/index.ts'
 import { db } from '../database.ts'
 import type { Todo } from './todo.ts'
 import type { Env } from '../main.ts'

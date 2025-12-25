@@ -1,9 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { Toaster } from 'react-hot-toast'
 import { store } from './store.ts'
 import { Provider } from 'react-redux'
 import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-react'
-import './client.ts'
+import './features/api/client.ts'
 import { RequireToken } from './features/auth/RequireToken.tsx'
 import { Lists } from './features/lists/Lists.tsx'
 import './global.css'
@@ -34,5 +35,6 @@ createRoot(document.getElementById('root')!).render(
         </SignedIn>
       </Provider>
     </ClerkProvider>
+    <Toaster position="bottom-right" />
   </StrictMode>
 )

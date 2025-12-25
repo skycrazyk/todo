@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 import { getAuth } from '@hono/clerk-auth'
 import { createMiddleware } from 'hono/factory'
 import { db } from '../database.ts'

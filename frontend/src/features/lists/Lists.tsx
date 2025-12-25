@@ -3,7 +3,7 @@ import {
   useAddListMutation,
   useGetListsQuery,
   useUpdListMutation
-} from '../../api.ts'
+} from '../api/api.ts'
 import { List, type ListProps } from '../list/List.tsx'
 import { getListId, findListId } from './getListId.ts'
 import s from './Lists.module.css'

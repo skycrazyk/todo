@@ -1,6 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import { client as c } from './client.ts'
-import { tokenConfig } from './common.ts'
+import { tokenConfig } from '../../common.ts'
+import { zError, type ZError } from '@app/shared'
 
 type Handler = (...args: any[]) => Promise<Response>
 type Return<T extends Handler> = Awaited<
@@ -23,15 +24,32 @@ function queryFn<M extends Handler>(method: M) {
         ReturnType<Awaited<ReturnType<M>>['json']>
       >
 
+      if (!res.ok) {
+        throw data
+      }
+
       return { data }
-    } catch {
-      return {
-        // TODO придумать что-то получше
-        error: {
-          status: 500,
-          statusText: 'Internal Server Error',
-          data: undefined
+    } catch (e: unknown) {
+      if (e instanceof TypeError) {
+        return {
+          error: {
+            name: e.name as ZError['name'],
+            message: e.message
+          } satisfies ZError
         }
+      }
+
+      const knownError = zError.safeParse(e)
+
+      if (knownError.success) {
+        return { error: knownError.data }
+      }
+
+      return {
+        error: {
+          name: 'AppError',
+          message: 'An unknown error occurred'
+        } satisfies ZError
       }
     }
   }
@@ -45,7 +63,7 @@ const Tags = {
 // Define a service using a base URL and expected endpoints
 export const api = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({}),
+  baseQuery: fakeBaseQuery<ZError>(),
   tagTypes: Object.values(Tags),
   endpoints: (build) => ({
     // TODOS
