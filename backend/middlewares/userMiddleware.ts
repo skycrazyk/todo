@@ -1,6 +1,8 @@
 import { z } from 'zod'
+// TODO перенести результат getAuth в hono c.get('auth')
 import { getAuth } from '@hono/clerk-auth'
 import { createMiddleware } from 'hono/factory'
+// TODO перенести результат db в hono c.get('db')
 import { db } from '../database.ts'
 
 const zUser = z.object({
@@ -19,63 +21,63 @@ const zIdentity = z.object({
 
 type Identity = z.infer<typeof zIdentity>
 
-const comboUser = z.object({
+const zComboUser = z.object({
   ...zUser.shape,
   ...zIdentity.shape,
   identity_id: z.number()
 })
 
-export type ComboUser = z.infer<typeof comboUser>
+export type ComboUser = z.infer<typeof zComboUser>
 
-// TODO  Добавить блокировку транзакций создания пользователя при необходимости
-export const userMiddleware = createMiddleware(async (c, next) => {
-  const auth = getAuth(c)
+const ensureUser = db.transaction((auth: ReturnType<typeof getAuth>) => {
+  const stmtGetComboUser = db.prepare(`
+      SELECT u.*, ui.id as identity_id, ui.sub, ui.iss 
+      FROM users u
+      INNER JOIN users_identities ui
+      ON u.id = ui.user_id
+      WHERE iss = (:iss) AND sub = (:sub)
+    `)
 
-  const stmtGetUser = db.prepare(`
-    SELECT u.*, ui.id as identity_id, ui.sub, ui.iss 
-    FROM users u
-    INNER JOIN users_identities ui
-    ON u.id = ui.user_id
-    WHERE iss = (:iss) AND sub = (:sub)
-  `)
-
-  let comboUser = stmtGetUser.get({
+  const existing = stmtGetComboUser.get<ComboUser>({
     iss: auth?.sessionClaims?.iss,
     sub: auth?.userId
   })
 
-  if (comboUser) {
-    c.set('user', comboUser)
-  } else {
-    const stmtCreateUser = db.prepare(`
-      INSERT INTO users(email)
-      VALUES(:email)
-      RETURNING *
-    `)
+  if (existing) return existing
 
-    const newUser = stmtCreateUser.get({
-      email: auth?.sessionClaims?.email as string // TODO need fix typings
-    }) as User
+  const stmtCreateUser = db.prepare(`
+        INSERT INTO users(email)
+        VALUES(:email)
+        RETURNING *
+      `)
 
-    const stmtCreateIdentity = db.prepare(`
-      INSERT INTO users_identities(user_id, iss, sub)
-      VALUES(:user_id, :iss, :sub)
-      RETURNING *
-    `)
+  const user = stmtCreateUser.get<User>({
+    email: auth?.sessionClaims?.email as string // TODO need fix typings
+  })
 
-    const newIdentity = stmtCreateIdentity.get({
-      user_id: newUser?.id as number,
-      iss: auth?.sessionClaims?.iss,
-      sub: auth?.userId
-    }) as Identity
+  const stmtCreateIdentity = db.prepare(`
+        INSERT OR IGNORE INTO users_identities(user_id, iss, sub)
+        VALUES(:user_id, :iss, :sub)
+        RETURNING *
+      `)
 
-    comboUser = stmtGetUser.get({
-      iss: newIdentity?.iss,
-      sub: newIdentity?.sub
-    })
+  const identity = stmtCreateIdentity.get<Identity>({
+    user_id: user?.id as number,
+    iss: auth?.sessionClaims?.iss,
+    sub: auth?.userId
+  })
 
-    c.set('user', comboUser)
-  }
+  return stmtGetComboUser.get<ComboUser>({
+    iss: identity?.iss,
+    sub: identity?.sub
+  })
+})
+
+export const userMiddleware = createMiddleware(async (c, next) => {
+  const auth = getAuth(c)
+  const comboUser = ensureUser(auth)
+
+  c.set('user', comboUser)
 
   await next()
 })

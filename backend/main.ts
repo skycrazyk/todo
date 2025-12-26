@@ -26,6 +26,7 @@ const app = new Hono<Env>()
       credentials: true // Set to true if you need to send cookies or authentication headers
     })
   )
+  // TODO заменить на готовый middleware из hono когда будет
   .use(
     '*',
     clerkMiddleware({
@@ -40,8 +41,9 @@ const app = new Hono<Env>()
   .route('/list', list)
   .route('/lists', lists)
   .onError((e, c) => {
+    console.error('Error:', e)
+
     if (e instanceof HTTPException) {
-      console.error('Error cause:', e.cause)
       // Get the custom response
       return e.getResponse()
     }

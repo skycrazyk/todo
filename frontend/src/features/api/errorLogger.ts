@@ -1,7 +1,7 @@
 import { isRejectedWithValue } from '@reduxjs/toolkit'
 import type { Middleware } from '@reduxjs/toolkit'
 import toast from 'react-hot-toast'
-import { zError, is } from '@app/shared'
+import { zError } from '@app/shared'
 
 export const errorLogger: Middleware = () => (next) => (action) => {
   if (isRejectedWithValue(action)) {

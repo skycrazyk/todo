@@ -6,8 +6,7 @@ import { exception, success, zValidator } from '../utils/index.ts'
 
 const zList = z.object({
   id: z.number(),
-  title: z.string().optional(),
-  user_id: z.string()
+  title: z.string().optional()
 })
 
 export type List = z.infer<typeof zList>

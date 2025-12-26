@@ -7,7 +7,7 @@ const app = new Hono<Env>().get('/', (c) => {
   const user = c.get('user')
 
   const stmt = db.prepare(`
-    SELECT * 
+    SELECT id, title 
     FROM lists 
     WHERE user_id = (:user_id)
   `)

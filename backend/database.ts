@@ -2,10 +2,12 @@ import { Database } from '@db/sqlite'
 
 export const db = new Database('database.db')
 
+// TODO Выполнять запросы через exec
+// TODO Разобраться с миграциями
 db.sql`
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT NOT NULL
+    email TEXT NOT NULL UNIQUE
 );
 `
 
