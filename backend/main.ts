@@ -1,41 +1,37 @@
-import { Hono, type Context } from 'hono'
+import type { Context } from 'hono'
 import { cors } from 'hono/cors'
 import todo from './api/todo.ts'
 import todos from './api/todos.ts'
 import list from './api/list.ts'
 import lists from './api/lists.ts'
 import { clerkMiddleware } from '@hono/clerk-auth'
-import { userMiddleware, type ComboUser } from './middlewares/userMiddleware.ts'
+import { userMiddleware } from './middlewares/userMiddleware.ts'
 import { authMiddleware } from './middlewares/authMiddleware.ts'
+import { dbMiddleware } from './middlewares/dbMiddleware.ts'
 import { HTTPException } from 'hono/http-exception'
 import type { ZError } from '@app/shared'
-
-export type Env = {
-  Variables: {
-    // TODO вероятно можно глобально расширять типы Hono. см. clerkMiddleware
-    user: ComboUser
-  }
-}
+import { factory, type Env } from './factory.ts'
 
 export type Ctx = Context<Env>
 
-const app = new Hono<Env>()
+const app = factory
+  .createApp()
+  .use(dbMiddleware)
   .use(
     cors({
       origin: '*', // Replace with the actual origin of your frontend application
       credentials: true // Set to true if you need to send cookies or authentication headers
     })
   )
-  // TODO заменить на готовый middleware из hono когда будет
+  // TODO заменить на готовый middleware из hono
   .use(
-    '*',
     clerkMiddleware({
       secretKey: Deno.env.get('CLERK_SECRET_KEY'),
       publishableKey: Deno.env.get('CLERK_PUBLISHABLE_KEY')
     })
   )
-  .use('*', authMiddleware)
-  .use('*', userMiddleware)
+  .use(authMiddleware)
+  .use(userMiddleware)
   .route('/todo', todo)
   .route('/todos', todos)
   .route('/list', list)

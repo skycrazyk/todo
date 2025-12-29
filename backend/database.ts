@@ -2,7 +2,6 @@ import { Database } from '@db/sqlite'
 
 export const db = new Database('database.db')
 
-// TODO Выполнять запросы через exec
 // TODO Разобраться с миграциями
 db.exec(`
 PRAGMA foreign_keys = ON;

@@ -6,7 +6,7 @@ export function exception<T extends Ctx>(
   ctx: T,
   code: HTTPException['status'],
   message: string
-) {
+): never {
   throw new HTTPException(code, {
     res: ctx.json({
       name: 'AppError',

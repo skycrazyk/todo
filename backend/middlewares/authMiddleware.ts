@@ -1,9 +1,8 @@
 import { getAuth } from '@hono/clerk-auth'
-import { createMiddleware } from 'hono/factory'
-import type { Env } from '../main.ts'
 import { exception } from '../utils/index.ts'
+import { factory } from '../factory.ts'
 
-export const authMiddleware = createMiddleware<Env>(async (c, next) => {
+export const authMiddleware = factory.createMiddleware(async (c, next) => {
   const auth = getAuth(c)
 
   if (!auth?.userId) {

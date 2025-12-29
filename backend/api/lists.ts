@@ -1,12 +1,10 @@
-import { Hono } from 'hono'
-import { db } from '../database.ts'
-import type { Env } from '../main.ts'
 import type { List } from './list.ts'
+import { factory } from '../factory.ts'
 
-const app = new Hono<Env>().get('/', (c) => {
+const app = factory.createApp().get('/', (c) => {
   const user = c.get('user')
 
-  const stmt = db.prepare(`
+  const stmt = c.get('db').prepare(`
     SELECT id, title 
     FROM lists 
     WHERE user_id = (:user_id)

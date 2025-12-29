@@ -1,7 +1,5 @@
-import { Hono } from 'hono'
 import { z } from 'zod'
-import { db } from '../database.ts'
-import type { Env } from '../main.ts'
+import { factory } from '../factory.ts'
 import { exception, success, zValidator } from '../utils/index.ts'
 
 const zList = z.object({
@@ -15,12 +13,14 @@ const zPost = z.object({ title: z.string().optional().default('') })
 const zDelete = z.object({ id: z.number() })
 const zPatch = zList.pick({ id: true, title: true }).partial({ title: true })
 
-const app = new Hono<Env>()
+const app = factory
+  .createApp()
   .post('/', zValidator('json', zPost), (c) => {
     const user = c.get('user')
     const data = c.req.valid('json')
 
-    const result = db
+    const result = c
+      .get('db')
       .prepare(
         `
         INSERT INTO lists(title, user_id)
@@ -40,7 +40,8 @@ const app = new Hono<Env>()
     const data = c.req.valid('json')
 
     // Определяем принадлежность списка пользователю
-    const list = db
+    const list = c
+      .get('db')
       .prepare(
         `
       SELECT * FROM lists 
@@ -54,15 +55,18 @@ const app = new Hono<Env>()
     }
 
     // Удаляем все задачи из списка
-    db.prepare(
-      `
+    c.get('db')
+      .prepare(
+        `
       DELETE FROM todos 
       WHERE list_id = (:id) 
       `
-    ).run(data)
+      )
+      .run(data)
 
     // Удаляем список
-    const result = db
+    const result = c
+      .get('db')
       .prepare(
         `
         DELETE FROM lists 
@@ -82,7 +86,8 @@ const app = new Hono<Env>()
     const jReq = c.req.valid('json')
 
     // Определяем принадлежность списка пользователю
-    const list = db
+    const list = c
+      .get('db')
       .prepare(
         `
       SELECT * FROM lists 
@@ -102,7 +107,8 @@ const app = new Hono<Env>()
       .join(', ')
 
     // Обновляем список
-    const result = db
+    const result = c
+      .get('db')
       .prepare(
         `
       UPDATE lists

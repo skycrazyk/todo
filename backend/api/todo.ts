@@ -1,8 +1,6 @@
-import { Hono } from 'hono'
 import { z } from 'zod'
-import { db } from '../database.ts'
 import { exception, success, zValidator } from '../utils/index.ts'
-import type { Env } from '../main.ts'
+import { factory } from '../factory.ts'
 
 export const zTodo = z.object({
   id: z.number(),
@@ -17,11 +15,13 @@ const zPost = zTodo.pick({ title: true, list_id: true })
 const zDelete = zTodo.pick({ id: true, list_id: true })
 const zPatch = zTodo.partial({ title: true, done: true })
 
-const app = new Hono<Env>()
+const app = factory
+  .createApp()
   .post('/', zValidator('json', zPost), (c) => {
     const data = c.req.valid('json')
 
-    const result = db
+    const result = c
+      .get('db')
       .prepare(
         `
       INSERT INTO todos(title, list_id) 
@@ -44,7 +44,8 @@ const app = new Hono<Env>()
       .map((c) => `${c} = (:${c})`)
       .join(', ')
 
-    const result = db
+    const result = c
+      .get('db')
       .prepare(
         `
       UPDATE todos 
@@ -63,7 +64,8 @@ const app = new Hono<Env>()
   .delete('/', zValidator('json', zDelete), (c) => {
     const data = c.req.valid('json')
 
-    const result = db
+    const result = c
+      .get('db')
       .prepare(
         `
       DELETE FROM todos 

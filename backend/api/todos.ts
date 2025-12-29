@@ -1,18 +1,17 @@
-import { Hono } from 'hono'
 import { z } from 'zod'
 import { zValidator } from '../utils/index.ts'
-import { db } from '../database.ts'
 import type { Todo } from './todo.ts'
-import type { Env } from '../main.ts'
+import { factory } from '../factory.ts'
 
 const zGet = z.object({
   list_id: z.coerce.number(),
   done: z.stringbool().optional()
 })
 
-const app = new Hono<Env>().get('/', zValidator('query', zGet), (c) => {
+const app = factory.createApp().get('/', zValidator('query', zGet), (c) => {
   const user = c.get('user')
   const query = c.req.valid('query')
+  const db = c.get('db')
 
   const listStmt = db.prepare(`
     SELECT * 
