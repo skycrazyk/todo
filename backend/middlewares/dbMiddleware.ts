@@ -1,7 +1,8 @@
 import { factory } from '../factory.ts'
-import { db } from '../database.ts'
+import type { Database } from '@db/sqlite'
 
-export const dbMiddleware = factory.createMiddleware(async (c, next) => {
-  c.set('db', db)
-  await next()
-})
+export const dbMiddleware = (db: Database) =>
+  factory.createMiddleware(async (c, next) => {
+    c.set('db', db)
+    await next()
+  })

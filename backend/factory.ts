@@ -1,12 +1,4 @@
 import { createFactory } from 'hono/factory'
-import type { ComboUser } from './types.ts'
-import type { db } from './database.ts'
-
-export type Env = {
-  Variables: {
-    user: ComboUser
-    db: typeof db
-  }
-}
+import type { Env } from './types.ts'
 
 export const factory = createFactory<Env>()
