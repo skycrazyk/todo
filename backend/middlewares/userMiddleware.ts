@@ -1,10 +1,9 @@
-import { getAuth } from '@hono/clerk-auth'
-import type { ComboUser, Identity, User } from '../types.ts'
+import type { Auth, ComboUser, Identity, User } from '../types.ts'
 import { factory } from '../factory.ts'
 import { exception } from '../utils/exception.ts'
-import type { db as _db } from '../database.ts'
+import type { Database } from '@db/sqlite'
 
-const ensureUser = (db: typeof _db, auth: ReturnType<typeof getAuth>) =>
+const ensureUser = (db: Database, auth: Auth) =>
   db.transaction(() => {
     const stmtGetComboUser = db.prepare(`
       SELECT u.*, ui.id as identity_id, ui.sub, ui.iss 
@@ -15,8 +14,8 @@ const ensureUser = (db: typeof _db, auth: ReturnType<typeof getAuth>) =>
     `)
 
     const existing = stmtGetComboUser.get<ComboUser>({
-      iss: auth?.sessionClaims?.iss,
-      sub: auth?.userId
+      iss: auth.iss,
+      sub: auth.sub
     })
 
     if (existing) return existing
@@ -28,7 +27,7 @@ const ensureUser = (db: typeof _db, auth: ReturnType<typeof getAuth>) =>
       `)
 
     const user = stmtCreateUser.get<User>({
-      email: auth?.sessionClaims?.email as string // TODO need fix typings
+      email: auth.email
     })
 
     const stmtCreateIdentity = db.prepare(`
@@ -39,8 +38,8 @@ const ensureUser = (db: typeof _db, auth: ReturnType<typeof getAuth>) =>
 
     const identity = stmtCreateIdentity.get<Identity>({
       user_id: user?.id as number,
-      iss: auth?.sessionClaims?.iss,
-      sub: auth?.userId
+      iss: auth.iss,
+      sub: auth.sub
     })
 
     return stmtGetComboUser.get<ComboUser>({
@@ -50,7 +49,7 @@ const ensureUser = (db: typeof _db, auth: ReturnType<typeof getAuth>) =>
   })
 
 export const userMiddleware = factory.createMiddleware(async (c, next) => {
-  const auth = getAuth(c)
+  const auth = c.get('auth')
   const db = c.get('db')
   const comboUser = ensureUser(db, auth)()
 

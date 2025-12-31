@@ -6,7 +6,6 @@ export const errorHandler: ErrorHandler = (e, c) => {
   console.error(e)
 
   if (e instanceof HTTPException) {
-    // Get the custom response
     return e.getResponse()
   }
 

@@ -1,6 +1,6 @@
 import type { Context } from 'hono'
 import { z } from 'zod'
-import type { db } from './database.ts'
+import type { Database } from '@db/sqlite'
 
 export const zUser = z.object({
   id: z.number(),
@@ -27,10 +27,19 @@ export const zComboUser = z.object({
 export type ComboUser = z.infer<typeof zComboUser>
 
 export type Ctx = Context<Env>
+
+export const zAuth = z.object({
+  sub: z.string(),
+  iss: z.string(),
+  email: z.email()
+})
+
+export type Auth = z.infer<typeof zAuth>
 export type Env = {
   Variables: {
     user: ComboUser
-    db: typeof db
+    db: Database
+    auth: Auth
   }
   Bindings: Record<'CLERK_SECRET_KEY' | 'CLERK_PUBLISHABLE_KEY', string>
 }

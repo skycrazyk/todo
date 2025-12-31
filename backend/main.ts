@@ -4,16 +4,17 @@ import todos from './api/todos.ts'
 import list from './api/list.ts'
 import lists from './api/lists.ts'
 import { userMiddleware } from './middlewares/userMiddleware.ts'
-import { authMiddleware } from './middlewares/authMiddleware.ts'
+import { authApplyMiddleware } from './middlewares/authApplyMiddleware.ts'
+import { authRequireMiddleware } from './middlewares/authRequireMiddleware.ts'
 import { dbMiddleware } from './middlewares/dbMiddleware.ts'
 import { clerkMiddleware } from './middlewares/clerkMiddleware.ts'
 import { errorHandler } from './middlewares/errorHandler.ts'
 import { factory } from './factory.ts'
-import { db } from './database.ts'
+import { createDB } from './database.ts'
 
 const app = factory
   .createApp()
-  .use(dbMiddleware(db))
+  .use(dbMiddleware(createDB('database.db')))
   .use(
     cors({
       origin: '*', // Replace with the actual origin of your frontend application
@@ -21,7 +22,8 @@ const app = factory
     })
   )
   .use(clerkMiddleware)
-  .use(authMiddleware)
+  .use(authApplyMiddleware)
+  .use(authRequireMiddleware)
   .use(userMiddleware)
   .route('/todo', todo)
   .route('/todos', todos)
