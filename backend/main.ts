@@ -10,11 +10,12 @@ import { dbMiddleware } from './middlewares/dbMiddleware.ts'
 import { clerkMiddleware } from './middlewares/clerkMiddleware.ts'
 import { errorHandler } from './middlewares/errorHandler.ts'
 import { factory } from './factory.ts'
-import { createDB } from './database.ts'
+import { initDB } from './utils/index.ts'
 
+// TODO Реализовать с использованием Dependency Injection
 const app = factory
   .createApp()
-  .use(dbMiddleware(createDB('database.db')))
+  .use(dbMiddleware(initDB('database.db')))
   .use(
     cors({
       origin: '*', // Replace with the actual origin of your frontend application
