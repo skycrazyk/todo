@@ -1,4 +1,4 @@
-import type { Ctx } from '../main.ts'
+import type { Ctx } from '../types.ts'
 
 export function success<T extends Ctx>(ctx: T, message: string) {
   return ctx.json({ message } satisfies BackendSuccess)

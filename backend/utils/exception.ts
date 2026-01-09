@@ -1,5 +1,5 @@
 import { HTTPException } from 'hono/http-exception'
-import type { Ctx } from '../main.ts'
+import type { Ctx } from '../types.ts'
 import type { ZError } from '@app/shared'
 
 export function exception<T extends Ctx>(

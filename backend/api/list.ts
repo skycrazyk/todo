@@ -10,8 +10,13 @@ const zList = z.object({
 export type List = z.infer<typeof zList>
 
 const zPost = z.object({ title: z.string().optional().default('') })
+export type ZPost = z.infer<typeof zPost>
+
 const zDelete = z.object({ id: z.number() })
+export type ZDelete = z.infer<typeof zDelete>
+
 const zPatch = zList.pick({ id: true, title: true }).partial({ title: true })
+export type ZPatch = z.infer<typeof zPatch>
 
 const app = factory
   .createApp()
