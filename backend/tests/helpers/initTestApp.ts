@@ -1,4 +1,5 @@
-import { initApp, initDB } from '../utils/index.ts'
+import { initApp, initDB } from '../../utils/index.ts'
+import { user } from './user.ts'
 
 export function initTestApp() {
   const db = initDB(':memory:')
@@ -7,11 +8,7 @@ export function initTestApp() {
     db,
     authMiddleware: async (_c, next) => await next(),
     authApplyMiddleware: async (c, next) => {
-      c.set('auth', {
-        sub: 'test-user-id',
-        iss: 'test-issuer',
-        email: 'test@example.com'
-      })
+      c.set('auth', user)
 
       return await next()
     }

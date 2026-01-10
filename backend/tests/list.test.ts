@@ -1,12 +1,70 @@
 import { assertEquals } from '@std/assert'
-import { initTestApp } from './initTestApp.ts'
+import { initTestApp } from './helpers/initTestApp.ts'
+import type { ZDelete, ZPatch, ZPost } from '../api/list.ts'
+import { getLists } from './helpers/getLists.ts'
+import { addUser } from './helpers/addUser.ts'
+import { user as testUser } from './helpers/user.ts'
+import { addList } from './helpers/addList.ts'
 
-Deno.test('GET /lists returns empty list for new user', async () => {
-  const { app } = initTestApp()
+Deno.test('POST /list returns success message', async () => {
+  const { app, db } = initTestApp()
+  const user = addUser(db, testUser)
+  const title = 'Test list'
 
-  const res = await app.request('/lists')
+  const res = await app.request('/list', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title } satisfies ZPost)
+  })
+
   const data = await res.json()
+  const list = getLists(db, user.id)[0]
 
   assertEquals(res.status, 200)
-  assertEquals(data, [])
+  assertEquals(typeof data.message, 'string')
+  assertEquals(list.title, title)
+})
+
+Deno.test('DELETE /list removes a list', async () => {
+  const title = 'Test list'
+  const { app, db } = initTestApp()
+  const user = addUser(db, testUser)
+  const list = addList(db, title, user.id)
+
+  const res = await app.request('/list', {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: list.id } satisfies ZDelete)
+  })
+
+  const data = await res.json()
+  const lists = getLists(db, user.id)
+
+  assertEquals(res.status, 200)
+  assertEquals(typeof data.message, 'string')
+  assertEquals(lists.length, 0)
+})
+
+Deno.test("PATCH /list changes list's title", async () => {
+  const title = 'Test list'
+  const newTitle = 'Updated title'
+  const { app, db } = initTestApp()
+  const user = addUser(db, testUser)
+  let list = addList(db, title, user.id)
+
+  const res = await app.request('/list', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: list.id,
+      title: newTitle
+    } satisfies ZPatch)
+  })
+
+  const data = await res.json()
+  list = getLists(db, user.id)[0]
+
+  assertEquals(res.status, 200)
+  assertEquals(typeof data.message, 'string')
+  assertEquals(list.title, newTitle)
 })

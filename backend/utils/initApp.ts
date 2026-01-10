@@ -1,4 +1,5 @@
 import { cors } from 'hono/cors'
+import { logger } from 'hono/logger'
 import todo from '../api/todo.ts'
 import todos from '../api/todos.ts'
 import list from '../api/list.ts'
@@ -22,6 +23,7 @@ export const initApp = ({
 }) => {
   return factory
     .createApp()
+    .use(logger())
     .use(dbMiddleware(db))
     .use(
       cors({

@@ -1,18 +1,12 @@
 import { assertEquals } from '@std/assert'
-import { initTestApp } from './initTestApp.ts'
-import type { ZPost } from '../api/list.ts'
+import { initTestApp } from './helpers/initTestApp.ts'
 
-Deno.test('POST /list returns success message', async () => {
+Deno.test('GET /lists returns empty list for new user', async () => {
   const { app } = initTestApp()
 
-  const res = await app.request('/list', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title: 'New List' } satisfies ZPost)
-  })
-
+  const res = await app.request('/lists')
   const data = await res.json()
 
   assertEquals(res.status, 200)
-  assertEquals(typeof data.message, 'string')
+  assertEquals(data, [])
 })
