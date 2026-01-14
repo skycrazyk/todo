@@ -11,13 +11,13 @@ export const zTodo = z.object({
 
 export type Todo = z.infer<typeof zTodo>
 
-const zPost = zTodo.pick({ title: true, list_id: true })
+const zCreate = zTodo.pick({ title: true, list_id: true })
 const zDelete = zTodo.pick({ id: true, list_id: true })
-const zPatch = zTodo.partial({ title: true, done: true })
+const zUpdate = zTodo.partial({ title: true, done: true })
 
 const app = factory
   .createApp()
-  .post('/', zValidator('json', zPost), (c) => {
+  .post('/', zValidator('json', zCreate), (c) => {
     const data = c.req.valid('json')
 
     const result = c
@@ -36,7 +36,7 @@ const app = factory
 
     return success(c, 'Todo created successfully')
   })
-  .patch('/', zValidator('json', zPatch), (c) => {
+  .patch('/', zValidator('json', zUpdate), (c) => {
     const data = c.req.valid('json')
 
     const setClauses = Object.keys(data)

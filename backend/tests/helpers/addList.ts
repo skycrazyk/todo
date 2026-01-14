@@ -1,7 +1,10 @@
 import type { Database } from '@db/sqlite'
 import type { List } from '../../api/list.ts'
 
-export function addList(db: Database, title: string, userId: number) {
+export function addList(
+  db: Database,
+  payload: { title: string; user_id: number }
+) {
   const list = db
     .prepare(
       `
@@ -10,10 +13,7 @@ export function addList(db: Database, title: string, userId: number) {
         RETURNING *
     `
     )
-    .get<List>({
-      title,
-      user_id: userId
-    })
+    .get<List>(payload)
 
   if (!list) {
     throw new Error('Failed to add list')

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { zValidator } from '../utils/index.ts'
+import { zValidator, exception } from '../utils/index.ts'
 import type { Todo } from './todo.ts'
 import { factory } from '../factory.ts'
 
@@ -22,7 +22,7 @@ const app = factory.createApp().get('/', zValidator('query', zGet), (c) => {
   const list = listStmt.get({ id: query.list_id, user_id: user.id })
 
   if (!list) {
-    return c.json<Todo[]>([])
+    exception(c, 404, 'List not found')
   }
 
   const whereClauses = Object.keys(query)

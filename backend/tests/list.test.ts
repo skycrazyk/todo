@@ -29,7 +29,7 @@ Deno.test('DELETE /list removes a list', async () => {
   const title = 'Test list'
   const { app, db } = initTestApp()
   const user = addUser(db, testUser)
-  const list = addList(db, title, user.id)
+  const list = addList(db, { title, user_id: user.id })
 
   const res = await app.request('/list', {
     method: 'DELETE',
@@ -50,7 +50,7 @@ Deno.test("PATCH /list changes list's title", async () => {
   const newTitle = 'Updated title'
   const { app, db } = initTestApp()
   const user = addUser(db, testUser)
-  let list = addList(db, title, user.id)
+  let list = addList(db, { title, user_id: user.id })
 
   const res = await app.request('/list', {
     method: 'PATCH',
