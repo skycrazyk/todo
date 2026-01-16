@@ -1,5 +1,5 @@
 import { assertEquals } from '@std/assert'
-import { initTestApp } from './helpers/initTestApp.ts'
+import { initTestApp } from './helpers/index.ts'
 
 Deno.test('GET /lists returns empty list for new user', async () => {
   const { app } = initTestApp()

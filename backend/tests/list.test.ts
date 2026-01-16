@@ -1,10 +1,6 @@
 import { assertEquals } from '@std/assert'
-import { initTestApp } from './helpers/initTestApp.ts'
 import type { ZDelete, ZPatch, ZPost } from '../api/list.ts'
-import { getLists } from './helpers/getLists.ts'
-import { addUser } from './helpers/addUser.ts'
-import { user as testUser } from './helpers/user.ts'
-import { addList } from './helpers/addList.ts'
+import { initTestApp, getLists, addUser, user as testUser, addList } from './helpers/index.ts'
 
 Deno.test('POST /list returns success message', async () => {
   const { app, db } = initTestApp()

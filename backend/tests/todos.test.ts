@@ -1,9 +1,5 @@
 import { assertEquals } from '@std/assert'
-import { initTestApp } from './helpers/initTestApp.ts'
-import { addUser } from './helpers/addUser.ts'
-import { user as testUser } from './helpers/user.ts'
-import { addList } from './helpers/addList.ts'
-import { addTodo } from './helpers/addTodo.ts'
+import { initTestApp, addUser, user as testUser, addList, addTodo } from './helpers/index.ts'
 
 Deno.test('GET /todos returns todos', async () => {
   const { app, db } = initTestApp()
