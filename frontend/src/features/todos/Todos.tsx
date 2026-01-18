@@ -67,7 +67,7 @@ export function Todos({ listId }: { listId: number }) {
     const id = getTodoId(e)
     const { checked } = e.currentTarget
 
-    patch({ json: { list_id: listId, id: Number(id), done: checked } })
+    patch({ json: { list_id: listId, id: Number(id), done: Number(checked) } })
   }
 
   useEffect(() => {

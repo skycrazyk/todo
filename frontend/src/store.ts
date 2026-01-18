@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { api } from './features/api/api.ts'
-import { errorLogger } from './features/api/errorLogger.ts'
+import { errorLogger } from './features/api/errorLogger.tsx'
 
 export const store = configureStore({
   reducer: {

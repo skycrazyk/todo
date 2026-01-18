@@ -18,7 +18,7 @@ export function Todo({
     <li className={s.todo} data-itemid={id}>
       <input
         type="checkbox"
-        checked={done}
+        checked={Boolean(done)}
         onChange={onDoneChange}
         className={s.done}
       />

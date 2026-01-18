@@ -9,7 +9,14 @@ export const errorLogger: Middleware = () => (next) => (action) => {
     const parsed = zError.safeParse(payload)
 
     if (parsed.success) {
-      if (parsed.data.name !== 'ZotError') {
+      if (parsed.data.name === 'ZodError' && import.meta.env.DEV) {
+        toast.error(
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div>Validation Error</div>
+            <pre style={{ fontSize: '10px' }}>{parsed.data.message}</pre>
+          </div>
+        )
+      } else {
         toast.error(parsed.data.message)
       }
     }

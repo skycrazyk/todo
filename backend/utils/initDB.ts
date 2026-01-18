@@ -31,7 +31,7 @@ export function initDB(path: string) {
     CREATE TABLE IF NOT EXISTS todos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
-        done BOOLEAN DEFAULT FALSE NOT NULL,
+        done INTEGER DEFAULT 0 NOT NULL,
         list_id INTEGER NOT NULL,
         FOREIGN KEY (list_id) REFERENCES lists(id) ON DELETE CASCADE
     );

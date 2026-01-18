@@ -9,7 +9,7 @@ export default defineConfig({
     deno(),
     react(),
     checker({
-      // e.g. use TypeScript check
+      // TODO это не работает
       typescript: true
     })
   ]

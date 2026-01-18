@@ -5,7 +5,7 @@ import { factory } from '../factory.ts'
 export const zTodo = z.object({
   id: z.number(),
   title: z.string(),
-  done: z.boolean(),
+  done: z.number(),
   list_id: z.number()
 })
 
