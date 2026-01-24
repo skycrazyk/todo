@@ -12,4 +12,4 @@ export default app
 
 export type AppType = typeof app
 export type { Todo } from './api/todo.ts'
-export type { List } from './api/list.ts'
+export type { ListRes as List } from './api/list.ts'

@@ -1,10 +1,16 @@
 import { assertEquals } from '@std/assert'
 import type { ZDelete, ZPatch, ZPost } from '../api/list.ts'
-import { initTestApp, getLists, addUser, user as testUser, addList } from './helpers/index.ts'
+import {
+  initTestApp,
+  getLists,
+  addUser,
+  userFoo,
+  addList
+} from './helpers/index.ts'
 
 Deno.test('POST /list returns success message', async () => {
   const { app, db } = initTestApp()
-  const user = addUser(db, testUser)
+  const user = addUser(db, userFoo)
   const title = 'Test list'
 
   const res = await app.request('/list', {
@@ -24,7 +30,7 @@ Deno.test('POST /list returns success message', async () => {
 Deno.test('DELETE /list removes a list', async () => {
   const title = 'Test list'
   const { app, db } = initTestApp()
-  const user = addUser(db, testUser)
+  const user = addUser(db, userFoo)
   const list = addList(db, { title, user_id: user.id })
 
   const res = await app.request('/list', {
@@ -45,7 +51,7 @@ Deno.test("PATCH /list changes list's title", async () => {
   const title = 'Test list'
   const newTitle = 'Updated title'
   const { app, db } = initTestApp()
-  const user = addUser(db, testUser)
+  const user = addUser(db, userFoo)
   let list = addList(db, { title, user_id: user.id })
 
   const res = await app.request('/list', {

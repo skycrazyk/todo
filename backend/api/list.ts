@@ -4,10 +4,15 @@ import { exception, success, zValidator } from '../utils/index.ts'
 
 const zList = z.object({
   id: z.number(),
-  title: z.string().optional()
+  title: z.string().optional(),
+  user_id: z.number()
 })
 
 export type List = z.infer<typeof zList>
+
+const zListRes = zList.omit({ user_id: true })
+
+export type ListRes = z.infer<typeof zListRes>
 
 const zPost = z.object({ title: z.string().optional().default('') })
 export type ZPost = z.infer<typeof zPost>
@@ -15,7 +20,7 @@ export type ZPost = z.infer<typeof zPost>
 const zDelete = z.object({ id: z.number() })
 export type ZDelete = z.infer<typeof zDelete>
 
-const zPatch = zList.pick({ id: true, title: true }).partial({ title: true })
+const zPatch = zListRes.pick({ id: true, title: true }).partial({ title: true })
 export type ZPatch = z.infer<typeof zPatch>
 
 const app = factory
@@ -53,7 +58,7 @@ const app = factory
       WHERE id = (:id) AND user_id = (:user_id)
       `
       )
-      .get<List>({ ...data, user_id: user.id })
+      .get<ListRes>({ ...data, user_id: user.id })
 
     if (!list) {
       exception(c, 404, 'List not found or does not belong to user')
@@ -99,7 +104,7 @@ const app = factory
       WHERE id = (:id) AND user_id = (:user_id)
       `
       )
-      .get<List>({ id: jReq.id, user_id: user.id })
+      .get<ListRes>({ id: jReq.id, user_id: user.id })
 
     if (!list) {
       exception(c, 404, 'List not found or does not belong to user')

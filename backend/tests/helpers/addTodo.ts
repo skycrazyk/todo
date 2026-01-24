@@ -3,7 +3,7 @@ import type { Todo } from '../../api/todo.ts'
 
 export function addTodo(
   db: Database,
-  payload: { title: string; done: boolean; list_id: number }
+  payload: { title: string; done: number; list_id: number }
 ) {
   const todo = db
     .prepare(

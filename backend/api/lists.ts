@@ -1,4 +1,4 @@
-import type { List } from './list.ts'
+import type { ListRes } from './list.ts'
 import { factory } from '../factory.ts'
 
 const app = factory.createApp().get('/', (c) => {
@@ -10,7 +10,7 @@ const app = factory.createApp().get('/', (c) => {
     WHERE user_id = (:user_id)
   `)
 
-  const lists = stmt.all<List>({ user_id: user.id })
+  const lists = stmt.all<ListRes>({ user_id: user.id })
 
   return c.json(lists)
 })

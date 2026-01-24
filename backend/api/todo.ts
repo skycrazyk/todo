@@ -15,6 +15,8 @@ const zCreate = zTodo.pick({ title: true, list_id: true })
 const zDelete = zTodo.pick({ id: true, list_id: true })
 const zUpdate = zTodo.partial({ title: true, done: true })
 
+export type ZUpdate = z.infer<typeof zUpdate>
+
 const app = factory
   .createApp()
   .post('/', zValidator('json', zCreate), (c) => {
