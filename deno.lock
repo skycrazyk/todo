@@ -16,8 +16,8 @@
     "npm:@clerk/clerk-react@^5.57.0": "5.59.2_react@19.2.3_react-dom@19.2.3__react@19.2.3",
     "npm:@deno/vite-plugin@^1.0.6": "1.0.6_vite@7.3.1__@types+node@24.10.9__picomatch@4.0.3_@types+node@24.10.9",
     "npm:@eslint/js@^9.36.0": "9.39.2",
-    "npm:@hono/clerk-auth@^3.0.3": "3.0.3_hono@4.11.1_react@19.2.3_react-dom@19.2.3__react@19.2.3",
-    "npm:@hono/zod-validator@~0.7.4": "0.7.6_hono@4.11.1_zod@4.2.1",
+    "npm:@hono/clerk-auth@^3.0.3": "3.0.3_hono@4.11.7_react@19.2.3_react-dom@19.2.3__react@19.2.3",
+    "npm:@hono/zod-validator@~0.7.4": "0.7.6_hono@4.11.7_zod@4.2.1",
     "npm:@reduxjs/toolkit@^2.10.1": "2.11.2_react@19.2.3_react-redux@9.2.0__@types+react@19.2.7__react@19.2.3_@types+react@19.2.7_redux@5.0.1",
     "npm:@types/node@^24.6.0": "24.10.9",
     "npm:@types/react-dom@^19.1.9": "19.2.3_@types+react@19.2.7",
@@ -28,7 +28,7 @@
     "npm:eslint-plugin-react-refresh@~0.4.22": "0.4.26_eslint@9.39.2",
     "npm:eslint@^9.36.0": "9.39.2",
     "npm:globals@^16.4.0": "16.5.0",
-    "npm:hono@^4.10.4": "4.11.1",
+    "npm:hono@^4.10.4": "4.11.7",
     "npm:react-dom@^19.1.1": "19.2.3_react@19.2.3",
     "npm:react-hot-toast@^2.6.0": "2.6.0_react@19.2.3_react-dom@19.2.3__react@19.2.3_csstype@3.2.3",
     "npm:react-redux@^9.2.0": "9.2.0_@types+react@19.2.7_react@19.2.3",
@@ -466,7 +466,7 @@
         "levn"
       ]
     },
-    "@hono/clerk-auth@3.0.3_hono@4.11.1_react@19.2.3_react-dom@19.2.3__react@19.2.3": {
+    "@hono/clerk-auth@3.0.3_hono@4.11.7_react@19.2.3_react-dom@19.2.3__react@19.2.3": {
       "integrity": "sha512-N671mw3ulvxqxY8ou8D8ojVT7EKljXE6RjdC2egWExMcrQAglMSTvqvU096MbOT5zvWtc8QMo3SKiyTXn30BrQ==",
       "dependencies": [
         "@clerk/backend",
@@ -474,7 +474,7 @@
         "hono"
       ]
     },
-    "@hono/zod-validator@0.7.6_hono@4.11.1_zod@4.2.1": {
+    "@hono/zod-validator@0.7.6_hono@4.11.7_zod@4.2.1": {
       "integrity": "sha512-Io1B6d011Gj1KknV4rXYz4le5+5EubcWEU/speUjuw9XMMIaP3n78yXLhjd2A3PXaXaUwEAluOiAyLqhBEJgsw==",
       "dependencies": [
         "hono",
@@ -1172,8 +1172,8 @@
     "has-flag@4.0.0": {
       "integrity": "sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ=="
     },
-    "hono@4.11.1": {
-      "integrity": "sha512-KsFcH0xxHes0J4zaQgWbYwmz3UPOOskdqZmItstUG93+Wk1ePBLkLGwbP9zlmh1BFUiL8Qp+Xfu9P7feJWpGNg=="
+    "hono@4.11.7": {
+      "integrity": "sha512-l7qMiNee7t82bH3SeyUCt9UF15EVmaBvsppY2zQtrbIhl/yzBTny+YUxsVjSjQ6gaqaeVtZmGocom8TzBlA4Yw=="
     },
     "ignore@5.3.2": {
       "integrity": "sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g=="

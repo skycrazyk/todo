@@ -41,5 +41,8 @@ export type Env = {
     db: Database
     auth: Auth
   }
-  Bindings: Record<'CLERK_SECRET_KEY' | 'CLERK_PUBLISHABLE_KEY', string>
+  Bindings: Record<
+    'CLERK_SECRET_KEY' | 'CLERK_PUBLISHABLE_KEY' | 'ALLOWED_ORIGINS',
+    string
+  >
 }

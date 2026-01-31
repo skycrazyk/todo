@@ -1,4 +1,3 @@
-import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import todo from '../api/todo.ts'
 import todos from '../api/todos.ts'
@@ -11,6 +10,7 @@ import { errorHandler } from '../middlewares/errorHandler.ts'
 import { factory } from '../factory.ts'
 import type { Database } from '@db/sqlite'
 import type { MiddlewareHandler } from 'hono'
+import { corsMiddleware } from '../middlewares/corsMiddleware.ts'
 
 export const initApp = ({
   db,
@@ -25,12 +25,7 @@ export const initApp = ({
     .createApp()
     .use(logger())
     .use(dbMiddleware(db))
-    .use(
-      cors({
-        origin: '*', // Replace with the actual origin of your frontend application
-        credentials: true // Set to true if you need to send cookies or authentication headers
-      })
-    )
+    .use(corsMiddleware)
     .use(authMiddleware)
     .use(authApplyMiddleware)
     .use(authRequireMiddleware)
