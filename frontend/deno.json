@@ -1,5 +1,6 @@
 {
   "tasks": {
-    "check:ts": "watchexec -w . -e ts,tsx,js,json -i '**/{dist,node_modules,coverage,.git,public}' --clear -d 200 -- deno check src/Main.tsx ./src/global.d.ts"
+    "check:ts:watch": "watchexec -w . -e ts,tsx,js,json -i '**/{dist,node_modules,coverage,.git,public}' --clear -d 200 -- deno check src/Main.tsx ./src/global.d.ts",
+    "check:ts": "deno check src/Main.tsx ./src/global.d.ts"
   }
 }

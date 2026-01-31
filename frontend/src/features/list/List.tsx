@@ -1,6 +1,6 @@
 import { useDelListMutation } from '../api/api.ts'
 import { getListId } from '../lists/getListId.ts'
-import { Todos } from '../Todos/Todos.tsx'
+import { Todos } from '../todos/Todos.tsx'
 import type { List } from '@app/backend'
 import s from './List.module.css'
 
